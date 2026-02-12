@@ -55,11 +55,11 @@ const salvar = () => {
       </UFormField>
     </div>
 
-    <div class="flex justify-end gap-2 pt-4">
-      <UButton variant="ghost" color="neutral" @click="emit('cancelar')">
+    <div class="flex justify-end gap-3 pt-4">
+      <UButton variant="outline" color="neutral" @click="emit('cancelar')">
         Cancelar
       </UButton>
-      <UButton type="submit">
+      <UButton type="submit" icon="i-lucide-check">
         {{ props.funcionario ? 'Atualizar' : 'Cadastrar' }}
       </UButton>
     </div>

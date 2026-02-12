@@ -2,10 +2,15 @@
 const { isGestor, isAdmin, unidadeId } = useAuth()
 const { funcionarios, listar: listarFuncionarios } = useFuncionarios()
 const { criar } = useEmprestimos()
+const { comFeedback } = useToastFeedback()
 
 const handleSalvar = async (dados: any) => {
-  await criar(dados)
-  navigateTo('/emprestimos')
+  const result = await comFeedback(
+    () => criar(dados),
+    'Empréstimo cadastrado com sucesso',
+    'Erro ao cadastrar empréstimo'
+  )
+  if (result !== null) navigateTo('/emprestimos')
 }
 
 onMounted(() => {
@@ -26,12 +31,11 @@ onMounted(() => {
       :descricao="isGestor ? 'O empréstimo será enviado para aprovação do Admin' : 'Cadastrar novo empréstimo'"
     />
 
-    <div v-if="isGestor" class="mb-6 p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
-      <div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-        <UIcon name="i-lucide-info" />
-        <p class="text-sm">Este empréstimo precisará ser aprovado pelo Admin antes de gerar as parcelas.</p>
-      </div>
-    </div>
+    <InfoAlert
+      v-if="isGestor"
+      message="Este empréstimo precisará ser aprovado pelo Admin antes de gerar as parcelas."
+      color="yellow"
+    />
 
     <div class="max-w-2xl rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
       <EmprestimoForm

@@ -4,6 +4,7 @@ import type { Aprovacao } from '~/types'
 const supabase = useSupabaseClient()
 const { aprovar: aprovarEmp, rejeitar: rejeitarEmp } = useEmprestimos()
 const { aprovar: aprovarVale, rejeitar: rejeitarVale } = useVales()
+const { comFeedback } = useToastFeedback()
 
 const pendencias = ref<Aprovacao[]>([])
 const carregando = ref(true)
@@ -11,7 +12,6 @@ const carregando = ref(true)
 const carregarPendencias = async () => {
   carregando.value = true
   try {
-    // Empréstimos pendentes
     const { data: emps } = await supabase
       .from('emprestimos')
       .select(`
@@ -31,7 +31,6 @@ const carregarPendencias = async () => {
       solicitante: e.usuario_cadastro
     }))
 
-    // Vales pendentes
     const { data: vals } = await supabase
       .from('vales')
       .select(`
@@ -60,14 +59,26 @@ const carregarPendencias = async () => {
 }
 
 const handleAprovar = async (id: number, tipo: string) => {
-  if (tipo === 'EMPRESTIMO') await aprovarEmp(id)
-  else await aprovarVale(id)
+  await comFeedback(
+    async () => {
+      if (tipo === 'EMPRESTIMO') await aprovarEmp(id)
+      else await aprovarVale(id)
+    },
+    `${tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale'} aprovado com sucesso`,
+    'Erro ao aprovar'
+  )
   await carregarPendencias()
 }
 
 const handleRejeitar = async (id: number, tipo: string) => {
-  if (tipo === 'EMPRESTIMO') await rejeitarEmp(id)
-  else await rejeitarVale(id)
+  await comFeedback(
+    async () => {
+      if (tipo === 'EMPRESTIMO') await rejeitarEmp(id)
+      else await rejeitarVale(id)
+    },
+    `${tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale'} rejeitado`,
+    'Erro ao rejeitar'
+  )
   await carregarPendencias()
 }
 
@@ -78,9 +89,12 @@ onMounted(() => carregarPendencias())
   <div>
     <PageHeader titulo="Pendências de Aprovação" descricao="Empréstimos e vales aguardando sua aprovação" />
 
-    <div v-if="carregando" class="text-center py-12 text-gray-500">Carregando...</div>
+    <div v-if="carregando" class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
+      <UIcon name="i-lucide-loader-2" class="text-2xl animate-spin mb-3" />
+      <p class="text-sm">Carregando...</p>
+    </div>
 
-    <div v-else-if="pendencias.length === 0" class="text-center py-12">
+    <div v-else-if="pendencias.length === 0" class="flex flex-col items-center justify-center py-16">
       <UIcon name="i-lucide-check-circle-2" class="text-4xl text-green-500 mb-3" />
       <p class="text-gray-500">Nenhuma pendência de aprovação</p>
     </div>

@@ -15,7 +15,7 @@ const statusOptions = [
   { label: 'Rejeitado', value: 'REJEITADO' }
 ]
 
-const emprestimosFiltrados = computed(() => {
+const filtrados = computed(() => {
   return emprestimos.value.filter(e => {
     const matchBusca = !busca.value
       || e.funcionario?.nome.toLowerCase().includes(busca.value.toLowerCase())
@@ -23,6 +23,15 @@ const emprestimosFiltrados = computed(() => {
     return matchBusca && matchStatus
   })
 })
+
+const columns = [
+  { key: 'funcionario', label: 'Funcionário' },
+  { key: 'unidade', label: 'Unidade' },
+  { key: 'valor_total', label: 'Valor Total' },
+  { key: 'parcelas', label: 'Parcelas' },
+  { key: 'data_inicio_desconto', label: 'Início' },
+  { key: 'status', label: 'Status' }
+]
 
 onMounted(() => listar())
 </script>
@@ -37,44 +46,37 @@ onMounted(() => listar())
       </template>
     </PageHeader>
 
-    <div class="flex gap-4 mb-6">
-      <UInput v-model="busca" placeholder="Buscar por funcionário..." icon="i-lucide-search" class="flex-1 max-w-sm" />
-      <USelect v-model="statusFiltro" :items="statusOptions" placeholder="Filtrar por status" class="w-56" />
-    </div>
+    <FilterBar
+      v-model:busca="busca"
+      v-model:filtro="statusFiltro"
+      search-placeholder="Buscar por funcionário..."
+      :filter-options="statusOptions"
+      filter-placeholder="Filtrar por status"
+      show-filter
+    />
 
-    <div v-if="carregando" class="text-center py-12 text-gray-500">Carregando...</div>
-
-    <div v-else class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-50 dark:bg-gray-800">
-          <tr>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Funcionário</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Unidade</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Valor Total</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Parcelas</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Início</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Status</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-          <tr v-if="emprestimosFiltrados.length === 0">
-            <td colspan="6" class="px-4 py-8 text-center text-gray-500">Nenhum empréstimo encontrado</td>
-          </tr>
-          <tr v-for="emp in emprestimosFiltrados" :key="emp.id" class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-            <td class="px-4 py-3">
-              <NuxtLink :to="`/funcionarios/${emp.funcionario_id}`" class="font-medium hover:text-primary">
-                {{ emp.funcionario?.nome }}
-              </NuxtLink>
-              <p class="text-xs text-gray-400">{{ emp.funcionario?.matricula }}</p>
-            </td>
-            <td class="px-4 py-3 text-gray-500">{{ emp.funcionario?.unidade?.nome }}</td>
-            <td class="px-4 py-3 font-medium">{{ moeda(emp.valor_total) }}</td>
-            <td class="px-4 py-3 text-gray-500">{{ emp.num_parcelas }}x {{ moeda(emp.valor_parcela) }}</td>
-            <td class="px-4 py-3 text-gray-500">{{ data(emp.data_inicio_desconto) }}</td>
-            <td class="px-4 py-3"><StatusBadge :status="emp.status" /></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <DataTable :columns="columns" :data="filtrados" :loading="carregando" empty-text="Nenhum empréstimo encontrado">
+      <template #cell-funcionario="{ row }">
+        <NuxtLink :to="`/funcionarios/${row.funcionario_id}`" class="font-medium hover:text-primary transition-colors">
+          {{ row.funcionario?.nome }}
+        </NuxtLink>
+        <p class="text-xs text-gray-400">{{ row.funcionario?.matricula }}</p>
+      </template>
+      <template #cell-unidade="{ row }">
+        <span class="text-gray-500">{{ row.funcionario?.unidade?.nome }}</span>
+      </template>
+      <template #cell-valor_total="{ row }">
+        <span class="font-medium">{{ moeda(row.valor_total) }}</span>
+      </template>
+      <template #cell-parcelas="{ row }">
+        <span class="text-gray-500">{{ row.num_parcelas }}x {{ moeda(row.valor_parcela) }}</span>
+      </template>
+      <template #cell-data_inicio_desconto="{ row }">
+        <span class="text-gray-500">{{ data(row.data_inicio_desconto) }}</span>
+      </template>
+      <template #cell-status="{ row }">
+        <StatusBadge :status="row.status" />
+      </template>
+    </DataTable>
   </div>
 </template>

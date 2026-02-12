@@ -85,11 +85,11 @@ const salvar = () => {
       <UTextarea v-model="form.motivo" placeholder="Descreva o motivo do empréstimo..." :rows="3" />
     </UFormField>
 
-    <div class="flex justify-end gap-2 pt-4">
-      <UButton variant="ghost" color="neutral" @click="emit('cancelar')">
+    <div class="flex justify-end gap-3 pt-4">
+      <UButton variant="outline" color="neutral" @click="emit('cancelar')">
         Cancelar
       </UButton>
-      <UButton type="submit">
+      <UButton type="submit" icon="i-lucide-check">
         Cadastrar Empréstimo
       </UButton>
     </div>

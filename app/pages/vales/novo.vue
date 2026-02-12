@@ -2,10 +2,15 @@
 const { isGestor, unidadeId } = useAuth()
 const { funcionarios, listar: listarFuncionarios } = useFuncionarios()
 const { criar } = useVales()
+const { comFeedback } = useToastFeedback()
 
 const handleSalvar = async (dados: any) => {
-  await criar(dados)
-  navigateTo('/vales')
+  const result = await comFeedback(
+    () => criar(dados),
+    'Vale cadastrado com sucesso',
+    'Erro ao cadastrar vale'
+  )
+  if (result !== null) navigateTo('/vales')
 }
 
 onMounted(() => {
@@ -26,12 +31,11 @@ onMounted(() => {
       :descricao="isGestor ? 'O vale será enviado para aprovação do Admin' : 'Registrar novo vale'"
     />
 
-    <div v-if="isGestor" class="mb-6 p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
-      <div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-        <UIcon name="i-lucide-info" />
-        <p class="text-sm">Este vale precisará ser aprovado pelo Admin.</p>
-      </div>
-    </div>
+    <InfoAlert
+      v-if="isGestor"
+      message="Este vale precisará ser aprovado pelo Admin."
+      color="yellow"
+    />
 
     <div class="max-w-2xl rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
       <ValeForm

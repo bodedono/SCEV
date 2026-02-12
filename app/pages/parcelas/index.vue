@@ -22,6 +22,23 @@ const isAtrasada = (parcela: Parcela) => {
   return parcela.status === 'ATRASADA' || (parcela.status === 'PENDENTE' && new Date(parcela.data_prevista) < new Date())
 }
 
+const columns = computed(() => {
+  const cols = [
+    { key: 'funcionario', label: 'Funcionário' },
+    { key: 'tipo', label: 'Tipo' },
+    { key: 'parcela', label: 'Parcela' },
+    { key: 'valor', label: 'Valor' },
+    { key: 'vencimento', label: 'Vencimento' },
+    { key: 'status', label: 'Status' }
+  ]
+  if (podeDarBaixa.value) {
+    cols.push({ key: 'acao', label: 'Ação' })
+  }
+  return cols
+})
+
+const rowClass = (row: Parcela) => isAtrasada(row) ? 'bg-red-50 dark:bg-red-950/10' : ''
+
 onMounted(() => listarPendentes())
 </script>
 
@@ -29,59 +46,50 @@ onMounted(() => listarPendentes())
   <div>
     <PageHeader titulo="Parcelas Pendentes" descricao="Parcelas aguardando pagamento" />
 
-    <div v-if="carregando" class="text-center py-12 text-gray-500">Carregando...</div>
+    <DataTable
+      :columns="columns"
+      :data="parcelas"
+      :loading="carregando"
+      :row-class="rowClass"
+      empty-text="Nenhuma parcela pendente"
+      empty-icon="i-lucide-check-circle"
+    >
+      <template #cell-funcionario="{ row }">
+        <span class="font-medium">{{ row.funcionario?.nome }}</span>
+      </template>
+      <template #cell-tipo="{ row }">
+        <UBadge :color="row.tipo === 'EMPRESTIMO' ? 'info' : 'warning'" variant="subtle" size="xs">
+          {{ row.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}
+        </UBadge>
+      </template>
+      <template #cell-parcela="{ row }">
+        <span class="text-gray-500">{{ row.numero }}/{{ row.total_parcelas }}</span>
+      </template>
+      <template #cell-valor="{ row }">
+        <span class="font-medium">{{ moeda(row.valor) }}</span>
+      </template>
+      <template #cell-vencimento="{ row }">
+        <span :class="isAtrasada(row) ? 'text-red-600 font-semibold' : 'text-gray-500'">
+          {{ data(row.data_prevista) }}
+          <span v-if="isAtrasada(row)" class="ml-1 text-xs">ATRASADA</span>
+        </span>
+      </template>
+      <template #cell-status="{ row }">
+        <StatusBadge :status="isAtrasada(row) ? 'ATRASADA' : row.status" />
+      </template>
+      <template #cell-acao="{ row }">
+        <UButton size="xs" variant="soft" color="success" icon="i-lucide-check" @click="abrirBaixa(row)">
+          Baixa
+        </UButton>
+      </template>
+    </DataTable>
 
-    <div v-else class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-50 dark:bg-gray-800">
-          <tr>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Funcionário</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Tipo</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Parcela</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Valor</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Vencimento</th>
-            <th class="px-4 py-3 text-left font-medium text-gray-500">Status</th>
-            <th v-if="podeDarBaixa" class="px-4 py-3 text-left font-medium text-gray-500">Ação</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-          <tr v-if="parcelas.length === 0">
-            <td :colspan="podeDarBaixa ? 7 : 6" class="px-4 py-8 text-center text-gray-500">Nenhuma parcela pendente</td>
-          </tr>
-          <tr
-            v-for="parcela in parcelas"
-            :key="parcela.id"
-            :class="isAtrasada(parcela) ? 'bg-red-50 dark:bg-red-950/10' : ''"
-          >
-            <td class="px-4 py-3 font-medium">{{ parcela.funcionario?.nome }}</td>
-            <td class="px-4 py-3">
-              <UBadge :color="parcela.tipo === 'EMPRESTIMO' ? 'info' : 'warning'" variant="subtle" size="xs">
-                {{ parcela.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}
-              </UBadge>
-            </td>
-            <td class="px-4 py-3 text-gray-500">{{ parcela.numero }}/{{ parcela.total_parcelas }}</td>
-            <td class="px-4 py-3 font-medium">{{ moeda(parcela.valor) }}</td>
-            <td class="px-4 py-3" :class="isAtrasada(parcela) ? 'text-red-600 font-semibold' : 'text-gray-500'">
-              {{ data(parcela.data_prevista) }}
-              <span v-if="isAtrasada(parcela)" class="ml-1 text-xs">ATRASADA</span>
-            </td>
-            <td class="px-4 py-3">
-              <StatusBadge :status="isAtrasada(parcela) ? 'ATRASADA' : parcela.status" />
-            </td>
-            <td v-if="podeDarBaixa" class="px-4 py-3">
-              <UButton size="xs" variant="soft" icon="i-lucide-check" @click="abrirBaixa(parcela)">
-                Baixa
-              </UButton>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div v-if="perfilCarregado && !podeDarBaixa" class="mt-4 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 text-sm text-blue-600 dark:text-blue-400 flex items-center gap-2">
-      <UIcon name="i-lucide-info" />
-      Você está em modo visualização. Contate o Admin para registrar baixas.
-    </div>
+    <InfoAlert
+      v-if="perfilCarregado && !podeDarBaixa"
+      message="Você está em modo visualização. Contate o Admin para registrar baixas."
+      color="blue"
+      icon="i-lucide-info"
+    />
 
     <ParcelaBaixaModal v-model="modalBaixa" :parcela="parcelaSelecionada" @confirmar="handleBaixa" />
   </div>
