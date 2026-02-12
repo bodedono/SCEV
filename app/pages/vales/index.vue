@@ -16,7 +16,7 @@ const statusOptions = [
 ]
 
 const filtrados = computed(() => {
-  return vales.value.filter(v => {
+  return vales.value.filter((v) => {
     const matchBusca = !busca.value
       || v.funcionario?.nome.toLowerCase().includes(busca.value.toLowerCase())
       || v.comentario.toLowerCase().includes(busca.value.toLowerCase())
@@ -39,9 +39,16 @@ onMounted(() => listar())
 
 <template>
   <div>
-    <PageHeader titulo="Vales" descricao="Gerenciamento de vales">
+    <PageHeader
+      titulo="Vales"
+      descricao="Gerenciamento de vales"
+    >
       <template #acoes>
-        <UButton v-if="podeCadastrar" icon="i-lucide-plus" to="/vales/novo">
+        <UButton
+          v-if="podeCadastrar"
+          icon="i-lucide-plus"
+          to="/vales/novo"
+        >
           Novo Vale
         </UButton>
       </template>
@@ -56,9 +63,17 @@ onMounted(() => listar())
       show-filter
     />
 
-    <DataTable :columns="columns" :data="filtrados" :loading="carregando" empty-text="Nenhum vale encontrado">
+    <DataTable
+      :columns="columns"
+      :data="filtrados"
+      :loading="carregando"
+      empty-text="Nenhum vale encontrado"
+    >
       <template #cell-funcionario="{ row }">
-        <NuxtLink :to="`/funcionarios/${row.funcionario_id}`" class="font-medium hover:text-primary transition-colors">
+        <NuxtLink
+          :to="`/funcionarios/${row.funcionario_id}`"
+          class="font-medium hover:text-primary transition-colors"
+        >
           {{ row.funcionario?.nome }}
         </NuxtLink>
       </template>

@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
   const mimeType = comprovanteField.type || 'image/jpeg'
 
   // Enviar para Groq Vision API
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const groqResponse = await $fetch<any>('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -106,7 +107,7 @@ export default defineEventHandler(async (event) => {
     valor_bate: valorComprovante !== null && Math.abs(valorComprovante - valorParcela) < 0.50,
     nome_encontrado: analise.nome_pagador
       ? analise.nome_pagador.toLowerCase().includes(nomeFuncionario.toLowerCase().split(' ')[0])
-        || nomeFuncionario.toLowerCase().includes(analise.nome_pagador.toLowerCase().split(' ')[0])
+      || nomeFuncionario.toLowerCase().includes(analise.nome_pagador.toLowerCase().split(' ')[0])
       : false,
     documento_valido: analise.tipo_documento !== 'outro'
   }

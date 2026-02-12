@@ -7,6 +7,7 @@ const { buscarComSaldo } = useFuncionarios()
 
 const id = computed(() => Number(route.params.id))
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const funcionario = ref<any>(null)
 const emprestimos = ref<Emprestimo[]>([])
 const vales = ref<Vale[]>([])
@@ -51,12 +52,20 @@ const desativarFuncionario = async () => {
 <template>
   <div>
     <div class="mb-4">
-      <UButton icon="i-lucide-arrow-left" variant="ghost" color="neutral" to="/funcionarios">
+      <UButton
+        icon="i-lucide-arrow-left"
+        variant="ghost"
+        color="neutral"
+        to="/funcionarios"
+      >
         Voltar para lista
       </UButton>
     </div>
 
-    <div v-if="carregando" class="text-center py-12 text-gray-500">
+    <div
+      v-if="carregando"
+      class="text-center py-12 text-gray-500"
+    >
       Carregando funcionário...
     </div>
 
@@ -70,8 +79,13 @@ const desativarFuncionario = async () => {
       />
 
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold">{{ funcionario.nome }}</h1>
-        <div v-if="isAdmin" class="flex gap-2">
+        <h1 class="text-2xl font-bold">
+          {{ funcionario.nome }}
+        </h1>
+        <div
+          v-if="isAdmin"
+          class="flex gap-2"
+        >
           <UButton
             v-if="funcionario.ativo"
             variant="soft"

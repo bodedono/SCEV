@@ -50,8 +50,14 @@ const salvar = () => {
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent="salvar">
-    <UFormField label="Funcionário" required>
+  <form
+    class="space-y-4"
+    @submit.prevent="salvar"
+  >
+    <UFormField
+      label="Funcionário"
+      required
+    >
       <USelect
         v-model="form.funcionario_id"
         :items="funcionarioOptions"
@@ -61,35 +67,76 @@ const salvar = () => {
     </UFormField>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField label="Valor Total (R$)" required>
-        <UInput v-model.number="form.valor_total" type="number" min="0.01" step="0.01" placeholder="0,00" />
+      <UFormField
+        label="Valor Total (R$)"
+        required
+      >
+        <UInput
+          v-model.number="form.valor_total"
+          type="number"
+          min="0.01"
+          step="0.01"
+          placeholder="0,00"
+        />
       </UFormField>
 
-      <UFormField label="Número de Parcelas" required>
-        <UInput v-model.number="form.num_parcelas" type="number" min="1" step="1" placeholder="1" />
+      <UFormField
+        label="Número de Parcelas"
+        required
+      >
+        <UInput
+          v-model.number="form.num_parcelas"
+          type="number"
+          min="1"
+          step="1"
+          placeholder="1"
+        />
       </UFormField>
     </div>
 
     <!-- Prévia das parcelas -->
-    <div v-if="valorParcela > 0" class="p-3 rounded-lg bg-primary/5 border border-primary/20">
+    <div
+      v-if="valorParcela > 0"
+      class="p-3 rounded-lg bg-primary/5 border border-primary/20"
+    >
       <p class="text-sm font-medium text-primary">
         {{ form.num_parcelas }}x de {{ moeda(valorParcela) }}
       </p>
     </div>
 
-    <UFormField label="Data de Início do Desconto" required>
-      <UInput v-model="form.data_inicio_desconto" type="date" />
+    <UFormField
+      label="Data de Início do Desconto"
+      required
+    >
+      <UInput
+        v-model="form.data_inicio_desconto"
+        type="date"
+      />
     </UFormField>
 
-    <UFormField label="Motivo / Justificativa" required>
-      <UTextarea v-model="form.motivo" placeholder="Descreva o motivo do empréstimo..." :rows="3" />
+    <UFormField
+      label="Motivo / Justificativa"
+      required
+    >
+      <UTextarea
+        v-model="form.motivo"
+        placeholder="Descreva o motivo do empréstimo..."
+        :rows="3"
+      />
     </UFormField>
 
     <div class="flex justify-end gap-3 pt-4">
-      <UButton variant="outline" color="neutral" @click="emit('cancelar')">
+      <UButton
+        variant="outline"
+        color="neutral"
+        @click="emit('cancelar')"
+      >
         Cancelar
       </UButton>
-      <UButton type="submit" icon="i-lucide-check">
+      <UButton
+        type="submit"
+        icon="i-lucide-check"
+      >
         Cadastrar Empréstimo
       </UButton>
     </div>

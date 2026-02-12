@@ -31,9 +31,15 @@ const colunasVales = [
 
 <template>
   <div>
-    <PageHeader titulo="Meus Lançamentos" descricao="Empréstimos e vales que você cadastrou" />
+    <PageHeader
+      titulo="Meus Lançamentos"
+      descricao="Empréstimos e vales que você cadastrou"
+    />
 
-    <TabBar v-model="tab" :tabs="tabs" />
+    <TabBar
+      v-model="tab"
+      :tabs="tabs"
+    />
 
     <!-- Empréstimos -->
     <DataTable

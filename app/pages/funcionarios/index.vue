@@ -14,7 +14,7 @@ const unidadeOptions = computed(() => [
 ])
 
 const filtrados = computed(() => {
-  return funcionarios.value.filter(f => {
+  return funcionarios.value.filter((f) => {
     const matchBusca = !busca.value
       || f.nome.toLowerCase().includes(busca.value.toLowerCase())
       || f.matricula.includes(busca.value)
@@ -33,6 +33,7 @@ const columns = [
   { key: 'acoes', label: '' }
 ]
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSalvar = async (dados: any) => {
   const { criar } = useFuncionarios()
   await criar(dados)
@@ -50,9 +51,16 @@ onMounted(async () => {
 
 <template>
   <div>
-    <PageHeader titulo="Funcionários" descricao="Gerenciamento de funcionários">
+    <PageHeader
+      titulo="Funcionários"
+      descricao="Gerenciamento de funcionários"
+    >
       <template #acoes>
-        <UButton v-if="isAdmin" icon="i-lucide-plus" @click="modalCadastro = true">
+        <UButton
+          v-if="isAdmin"
+          icon="i-lucide-plus"
+          @click="modalCadastro = true"
+        >
           Novo Funcionário
         </UButton>
       </template>
@@ -94,26 +102,44 @@ onMounted(async () => {
         <span class="text-gray-500">{{ row.cargo }}</span>
       </template>
       <template #cell-status="{ row }">
-        <UBadge :color="row.ativo ? 'success' : 'error'" variant="subtle" size="sm">
+        <UBadge
+          :color="row.ativo ? 'success' : 'error'"
+          variant="subtle"
+          size="sm"
+        >
           {{ row.ativo ? 'Ativo' : 'Inativo' }}
         </UBadge>
       </template>
       <template #cell-saldo_devedor="{ row }">
-        <span class="font-medium" :class="(row.saldo_devedor ?? 0) > 0 ? 'text-red-600' : 'text-gray-500'">
+        <span
+          class="font-medium"
+          :class="(row.saldo_devedor ?? 0) > 0 ? 'text-red-600' : 'text-gray-500'"
+        >
           {{ moeda(row.saldo_devedor ?? 0) }}
         </span>
       </template>
       <template #cell-acoes>
-        <UButton icon="i-lucide-eye" variant="ghost" color="neutral" size="xs" />
+        <UButton
+          icon="i-lucide-eye"
+          variant="ghost"
+          color="neutral"
+          size="xs"
+        />
       </template>
     </DataTable>
 
     <UModal v-model:open="modalCadastro">
       <template #header>
-        <h3 class="text-lg font-semibold">Novo Funcionário</h3>
+        <h3 class="text-lg font-semibold">
+          Novo Funcionário
+        </h3>
       </template>
       <template #body>
-        <FuncionarioForm :unidades="unidades" @salvar="handleSalvar" @cancelar="modalCadastro = false" />
+        <FuncionarioForm
+          :unidades="unidades"
+          @salvar="handleSalvar"
+          @cancelar="modalCadastro = false"
+        />
       </template>
     </UModal>
   </div>

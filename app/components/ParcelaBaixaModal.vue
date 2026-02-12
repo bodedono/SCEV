@@ -19,20 +19,21 @@ const observacoes = ref('')
 const enviando = ref(false)
 const analisando = ref(false)
 
-// Resultado da análise IA
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const analiseIA = ref<any>(null)
 
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement
   if (!target.files?.length || !props.parcela) return
 
-  comprovante.value = target.files[0]
+  comprovante.value = target.files[0] ?? null
   analiseIA.value = null
 
   // Analisar com IA automaticamente
+  if (!comprovante.value) return
   analisando.value = true
   try {
-    analiseIA.value = await analisarComprovante(props.parcela.id, comprovante.value)
+    analiseIA.value = await analisarComprovante(props.parcela.id, comprovante.value!)
   } catch (e) {
     console.error('Erro na análise IA:', e)
     analiseIA.value = null
@@ -67,11 +68,16 @@ watch(model, (open) => {
 <template>
   <UModal v-model:open="model">
     <template #header>
-      <h3 class="text-lg font-semibold">Registrar Baixa</h3>
+      <h3 class="text-lg font-semibold">
+        Registrar Baixa
+      </h3>
     </template>
 
     <template #body>
-      <div v-if="parcela" class="space-y-4">
+      <div
+        v-if="parcela"
+        class="space-y-4"
+      >
         <!-- Info da parcela -->
         <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-2">
           <div class="flex justify-between text-sm">
@@ -97,7 +103,11 @@ watch(model, (open) => {
         </div>
 
         <!-- Upload comprovante -->
-        <UFormField label="Comprovante" required hint="PDF, JPG ou PNG (máx. 5MB)">
+        <UFormField
+          label="Comprovante"
+          required
+          hint="PDF, JPG ou PNG (máx. 5MB)"
+        >
           <input
             type="file"
             accept=".pdf,.jpg,.jpeg,.png"
@@ -107,59 +117,106 @@ watch(model, (open) => {
         </UFormField>
 
         <!-- Analisando -->
-        <div v-if="analisando" class="flex items-center gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400">
-          <UIcon name="i-lucide-brain" class="animate-pulse text-lg" />
+        <div
+          v-if="analisando"
+          class="flex items-center gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400"
+        >
+          <UIcon
+            name="i-lucide-brain"
+            class="animate-pulse text-lg"
+          />
           <span class="text-sm">IA analisando comprovante...</span>
         </div>
 
         <!-- Resultado da análise IA -->
-        <div v-if="analiseIA && !analisando" class="space-y-2">
+        <div
+          v-if="analiseIA && !analisando"
+          class="space-y-2"
+        >
           <!-- Sem alertas = tudo ok -->
-          <div v-if="analiseIA.aprovado_automaticamente" class="p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800">
+          <div
+            v-if="analiseIA.aprovado_automaticamente"
+            class="p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800"
+          >
             <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-              <UIcon name="i-lucide-check-circle" class="text-lg" />
+              <UIcon
+                name="i-lucide-check-circle"
+                class="text-lg"
+              />
               <span class="text-sm font-medium">Comprovante validado pela IA</span>
             </div>
             <div class="mt-2 text-xs text-green-600 dark:text-green-500 space-y-1">
-              <p v-if="analiseIA.analise?.valor">Valor encontrado: R$ {{ Number(analiseIA.analise.valor).toFixed(2) }}</p>
-              <p v-if="analiseIA.analise?.tipo_documento">Tipo: {{ analiseIA.analise.tipo_documento }}</p>
+              <p v-if="analiseIA.analise?.valor">
+                Valor encontrado: R$ {{ Number(analiseIA.analise.valor).toFixed(2) }}
+              </p>
+              <p v-if="analiseIA.analise?.tipo_documento">
+                Tipo: {{ analiseIA.analise.tipo_documento }}
+              </p>
             </div>
           </div>
 
           <!-- Com alertas -->
-          <div v-else class="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
+          <div
+            v-else
+            class="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800"
+          >
             <div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 mb-2">
-              <UIcon name="i-lucide-alert-triangle" class="text-lg" />
+              <UIcon
+                name="i-lucide-alert-triangle"
+                class="text-lg"
+              />
               <span class="text-sm font-medium">Atenção - verificar manualmente</span>
             </div>
             <ul class="text-xs text-yellow-600 dark:text-yellow-500 space-y-1">
-              <li v-for="(alerta, i) in analiseIA.alertas" :key="i" class="flex items-start gap-1">
+              <li
+                v-for="(alerta, i) in analiseIA.alertas"
+                :key="i"
+                class="flex items-start gap-1"
+              >
                 <span class="shrink-0 mt-0.5">-</span>
                 <span>{{ alerta }}</span>
               </li>
             </ul>
             <div class="mt-2 text-xs text-yellow-500 dark:text-yellow-600">
-              <p v-if="analiseIA.analise?.valor">Valor no comprovante: R$ {{ Number(analiseIA.analise.valor).toFixed(2) }}</p>
-              <p v-if="analiseIA.analise?.tipo_documento">Tipo: {{ analiseIA.analise.tipo_documento }}</p>
+              <p v-if="analiseIA.analise?.valor">
+                Valor no comprovante: R$ {{ Number(analiseIA.analise.valor).toFixed(2) }}
+              </p>
+              <p v-if="analiseIA.analise?.tipo_documento">
+                Tipo: {{ analiseIA.analise.tipo_documento }}
+              </p>
             </div>
           </div>
         </div>
 
-        <div v-if="comprovante && !analisando && !analiseIA" class="text-sm text-green-600 flex items-center gap-2">
+        <div
+          v-if="comprovante && !analisando && !analiseIA"
+          class="text-sm text-green-600 flex items-center gap-2"
+        >
           <UIcon name="i-lucide-check-circle" />
           {{ comprovante.name }}
         </div>
 
         <!-- Observações -->
-        <UFormField label="Observações" hint="Opcional">
-          <UTextarea v-model="observacoes" placeholder="Observações adicionais..." :rows="2" />
+        <UFormField
+          label="Observações"
+          hint="Opcional"
+        >
+          <UTextarea
+            v-model="observacoes"
+            placeholder="Observações adicionais..."
+            :rows="2"
+          />
         </UFormField>
       </div>
     </template>
 
     <template #footer>
       <div class="flex justify-end gap-2">
-        <UButton variant="ghost" color="neutral" @click="model = false">
+        <UButton
+          variant="ghost"
+          color="neutral"
+          @click="model = false"
+        >
           Cancelar
         </UButton>
         <UButton

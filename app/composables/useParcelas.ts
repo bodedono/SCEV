@@ -6,7 +6,7 @@ export const useParcelas = () => {
   const parcelas = ref<Parcela[]>([])
   const carregando = ref(false)
 
-  const listarPendentes = async (unidadeId?: number) => {
+  const listarPendentes = async (_unidadeId?: number) => {
     carregando.value = true
     try {
       const { data, error } = await supabase
@@ -28,6 +28,7 @@ export const useParcelas = () => {
       if (error) throw error
 
       // Normalizar dados: extrair funcionario do emprestimo ou vale
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const normalized = (data ?? []).map((p: any) => ({
         ...p,
         funcionario: p.emprestimo?.funcionario ?? p.vale?.funcionario ?? null

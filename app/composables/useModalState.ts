@@ -1,4 +1,4 @@
-export const useModalState = <T = any>() => {
+export const useModalState = <T = unknown>() => {
   const aberto = ref(false)
   const item = ref<T | null>(null) as Ref<T | null>
 

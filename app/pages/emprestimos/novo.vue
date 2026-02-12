@@ -1,9 +1,10 @@
 <script setup lang="ts">
-const { isGestor, isAdmin, unidadeId } = useAuth()
+const { isGestor, unidadeId } = useAuth()
 const { funcionarios, listar: listarFuncionarios } = useFuncionarios()
 const { criar } = useEmprestimos()
 const { comFeedback } = useToastFeedback()
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSalvar = async (dados: any) => {
   const result = await comFeedback(
     () => criar(dados),
@@ -21,7 +22,12 @@ onMounted(() => {
 <template>
   <div>
     <div class="mb-4">
-      <UButton icon="i-lucide-arrow-left" variant="ghost" color="neutral" to="/emprestimos">
+      <UButton
+        icon="i-lucide-arrow-left"
+        variant="ghost"
+        color="neutral"
+        to="/emprestimos"
+      >
         Voltar
       </UButton>
     </div>

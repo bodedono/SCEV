@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Montar objeto de update (apenas campos fornecidos)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateData: Record<string, any> = {}
   if (nome !== undefined) updateData.nome = nome.trim()
   if (email !== undefined) updateData.email = email.trim()

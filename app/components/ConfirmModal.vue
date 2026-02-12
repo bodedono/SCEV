@@ -18,19 +18,31 @@ defineEmits<{
 <template>
   <UModal v-model:open="model">
     <template #header>
-      <h3 class="text-lg font-semibold" :class="destructive ? 'text-red-600 dark:text-red-400' : ''">
+      <h3
+        class="text-lg font-semibold"
+        :class="destructive ? 'text-red-600 dark:text-red-400' : ''"
+      >
         {{ title }}
       </h3>
     </template>
     <template #body>
       <div class="space-y-3">
         <p>{{ message }}</p>
-        <p v-if="detail" class="text-sm text-gray-500 dark:text-gray-400">{{ detail }}</p>
+        <p
+          v-if="detail"
+          class="text-sm text-gray-500 dark:text-gray-400"
+        >
+          {{ detail }}
+        </p>
       </div>
     </template>
     <template #footer>
       <div class="flex justify-end gap-2">
-        <UButton variant="outline" color="neutral" @click="model = false">
+        <UButton
+          variant="outline"
+          color="neutral"
+          @click="model = false"
+        >
           Cancelar
         </UButton>
         <UButton

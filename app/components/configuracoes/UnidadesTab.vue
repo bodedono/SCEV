@@ -22,7 +22,12 @@ onMounted(() => listarUnidades())
 <template>
   <div>
     <div class="flex justify-end mb-4">
-      <UButton icon="i-lucide-plus" @click="modalUnidade = true">Nova Unidade</UButton>
+      <UButton
+        icon="i-lucide-plus"
+        @click="modalUnidade = true"
+      >
+        Nova Unidade
+      </UButton>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -34,31 +39,64 @@ onMounted(() => listarUnidades())
         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary">
           <UIcon name="i-lucide-building-2" />
         </div>
-        <p class="flex-1 font-medium">{{ unidade.nome }}</p>
-        <UBadge :color="unidade.ativo ? 'success' : 'error'" variant="subtle" size="xs">
+        <p class="flex-1 font-medium">
+          {{ unidade.nome }}
+        </p>
+        <UBadge
+          :color="unidade.ativo ? 'success' : 'error'"
+          variant="subtle"
+          size="xs"
+        >
           {{ unidade.ativo ? 'Ativa' : 'Inativa' }}
         </UBadge>
       </div>
     </div>
 
-    <div v-if="unidades.length === 0" class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-      <UIcon name="i-lucide-building-2" class="text-3xl mb-3" />
-      <p class="text-sm">Nenhuma unidade cadastrada</p>
+    <div
+      v-if="unidades.length === 0"
+      class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500"
+    >
+      <UIcon
+        name="i-lucide-building-2"
+        class="text-3xl mb-3"
+      />
+      <p class="text-sm">
+        Nenhuma unidade cadastrada
+      </p>
     </div>
 
     <UModal v-model:open="modalUnidade">
       <template #header>
-        <h3 class="text-lg font-semibold">Nova Unidade</h3>
+        <h3 class="text-lg font-semibold">
+          Nova Unidade
+        </h3>
       </template>
       <template #body>
-        <UFormField label="Nome da Unidade" required>
-          <UInput v-model="novaUnidade.nome" placeholder="Ex: Bode do Nô" />
+        <UFormField
+          label="Nome da Unidade"
+          required
+        >
+          <UInput
+            v-model="novaUnidade.nome"
+            placeholder="Ex: Bode do Nô"
+          />
         </UFormField>
       </template>
       <template #footer>
         <div class="flex justify-end gap-2">
-          <UButton variant="outline" color="neutral" @click="modalUnidade = false">Cancelar</UButton>
-          <UButton icon="i-lucide-check" @click="handleCriarUnidade">Criar Unidade</UButton>
+          <UButton
+            variant="outline"
+            color="neutral"
+            @click="modalUnidade = false"
+          >
+            Cancelar
+          </UButton>
+          <UButton
+            icon="i-lucide-check"
+            @click="handleCriarUnidade"
+          >
+            Criar Unidade
+          </UButton>
         </div>
       </template>
     </UModal>

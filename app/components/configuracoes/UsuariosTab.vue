@@ -40,12 +40,14 @@ const perfilLabel = (perfil: string) => {
   return map[perfil] ?? perfil
 }
 
-const perfilColor = (perfil: string) => {
-  const map: Record<string, string> = { ADMIN: 'error', GESTOR: 'warning', OPERADOR: 'info' }
+type BadgeColor = 'error' | 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'neutral'
+const perfilColor = (perfil: string): BadgeColor => {
+  const map: Record<string, BadgeColor> = { ADMIN: 'error', GESTOR: 'warning', OPERADOR: 'info' }
   return map[perfil] ?? 'neutral'
 }
 
 // Handlers
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSalvarUsuario = async (dados: any) => {
   salvandoUsuario.value = true
   try {
@@ -134,24 +136,39 @@ onMounted(async () => {
         class="flex-1 max-w-sm"
       />
       <div class="flex-1" />
-      <UButton icon="i-lucide-plus" @click="modalUsuario.abrir()">
+      <UButton
+        icon="i-lucide-plus"
+        @click="modalUsuario.abrir()"
+      >
         Novo Usuário
       </UButton>
     </div>
 
     <!-- Tabela -->
-    <DataTable :columns="columns" :data="filtrados" :loading="carregando" empty-text="Nenhum usuário encontrado">
+    <DataTable
+      :columns="columns"
+      :data="filtrados"
+      :loading="carregando"
+      empty-text="Nenhum usuário encontrado"
+    >
       <template #cell-nome="{ row }">
         <span class="font-medium">
           {{ row.nome }}
-          <span v-if="row.id === currentUser?.id" class="ml-1 text-xs text-gray-400">(você)</span>
+          <span
+            v-if="row.id === currentUser?.id"
+            class="ml-1 text-xs text-gray-400"
+          >(você)</span>
         </span>
       </template>
       <template #cell-email="{ row }">
         <span class="text-gray-500">{{ row.email }}</span>
       </template>
       <template #cell-perfil="{ row }">
-        <UBadge :color="perfilColor(row.perfil)" variant="subtle" size="sm">
+        <UBadge
+          :color="perfilColor(row.perfil)"
+          variant="subtle"
+          size="sm"
+        >
           {{ perfilLabel(row.perfil) }}
         </UBadge>
       </template>
@@ -159,17 +176,33 @@ onMounted(async () => {
         <span class="text-gray-500">{{ row.unidade?.nome ?? 'Todas' }}</span>
       </template>
       <template #cell-status="{ row }">
-        <UBadge :color="row.ativo ? 'success' : 'error'" variant="subtle" size="sm">
+        <UBadge
+          :color="row.ativo ? 'success' : 'error'"
+          variant="subtle"
+          size="sm"
+        >
           {{ row.ativo ? 'Ativo' : 'Inativo' }}
         </UBadge>
       </template>
       <template #cell-acoes="{ row }">
         <div class="flex items-center gap-1">
           <UTooltip text="Editar">
-            <UButton icon="i-lucide-pencil" variant="ghost" color="neutral" size="xs" @click="modalUsuario.abrir(row)" />
+            <UButton
+              icon="i-lucide-pencil"
+              variant="ghost"
+              color="neutral"
+              size="xs"
+              @click="modalUsuario.abrir(row)"
+            />
           </UTooltip>
           <UTooltip text="Redefinir Senha">
-            <UButton icon="i-lucide-key" variant="ghost" color="neutral" size="xs" @click="abrirResetSenha(row)" />
+            <UButton
+              icon="i-lucide-key"
+              variant="ghost"
+              color="neutral"
+              size="xs"
+              @click="abrirResetSenha(row)"
+            />
           </UTooltip>
           <UTooltip :text="row.ativo ? 'Desativar' : 'Reativar'">
             <UButton
@@ -180,8 +213,17 @@ onMounted(async () => {
               @click="handleToggleAtivo(row)"
             />
           </UTooltip>
-          <UTooltip v-if="row.id !== currentUser?.id" text="Excluir">
-            <UButton icon="i-lucide-trash-2" variant="ghost" color="error" size="xs" @click="modalExcluir.abrir(row)" />
+          <UTooltip
+            v-if="row.id !== currentUser?.id"
+            text="Excluir"
+          >
+            <UButton
+              icon="i-lucide-trash-2"
+              variant="ghost"
+              color="error"
+              size="xs"
+              @click="modalExcluir.abrir(row)"
+            />
           </UTooltip>
         </div>
       </template>
@@ -219,22 +261,45 @@ onMounted(async () => {
     <!-- Modal Redefinir Senha -->
     <UModal v-model:open="modalResetSenha.aberto.value">
       <template #header>
-        <h3 class="text-lg font-semibold">Redefinir Senha</h3>
+        <h3 class="text-lg font-semibold">
+          Redefinir Senha
+        </h3>
       </template>
       <template #body>
         <div class="space-y-4">
           <p class="text-sm text-gray-500">
             Definir nova senha para <strong>{{ modalResetSenha.item.value?.nome }}</strong>
           </p>
-          <UFormField label="Nova Senha" required hint="Mínimo 6 caracteres">
-            <UInput v-model="novaSenha" type="password" placeholder="Nova senha" class="w-full" />
+          <UFormField
+            label="Nova Senha"
+            required
+            hint="Mínimo 6 caracteres"
+          >
+            <UInput
+              v-model="novaSenha"
+              type="password"
+              placeholder="Nova senha"
+              class="w-full"
+            />
           </UFormField>
         </div>
       </template>
       <template #footer>
         <div class="flex justify-end gap-2">
-          <UButton variant="outline" color="neutral" @click="modalResetSenha.fechar()">Cancelar</UButton>
-          <UButton :disabled="novaSenha.length < 6" icon="i-lucide-key" @click="handleResetSenha">Redefinir Senha</UButton>
+          <UButton
+            variant="outline"
+            color="neutral"
+            @click="modalResetSenha.fechar()"
+          >
+            Cancelar
+          </UButton>
+          <UButton
+            :disabled="novaSenha.length < 6"
+            icon="i-lucide-key"
+            @click="handleResetSenha"
+          >
+            Redefinir Senha
+          </UButton>
         </div>
       </template>
     </UModal>

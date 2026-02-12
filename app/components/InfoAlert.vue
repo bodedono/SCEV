@@ -17,10 +17,18 @@ const colorMap = {
 </script>
 
 <template>
-  <div class="mb-6 p-4 rounded-lg border" :class="colorMap[color]">
+  <div
+    class="mb-6 p-4 rounded-lg border"
+    :class="colorMap[color]"
+  >
     <div class="flex items-center gap-2">
-      <UIcon :name="icon" class="shrink-0" />
-      <p class="text-sm">{{ message }}</p>
+      <UIcon
+        :name="icon"
+        class="shrink-0"
+      />
+      <p class="text-sm">
+        {{ message }}
+      </p>
     </div>
   </div>
 </template>

@@ -51,6 +51,7 @@ export const useDashboard = () => {
         .select('valor')
         .in('status', ['PENDENTE', 'ATRASADA'])
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const valorTotal = (totalData ?? []).reduce((sum: number, p: any) => sum + Number(p.valor), 0)
 
       stats.value = {

@@ -1,16 +1,19 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FilterValue = any
+
 defineProps<{
   busca?: string
-  filtro?: any
+  filtro?: FilterValue
   searchPlaceholder?: string
-  filterOptions?: { label: string; value: any }[]
+  filterOptions?: { label: string, value: FilterValue }[]
   filterPlaceholder?: string
   showFilter?: boolean
 }>()
 
 defineEmits<{
   'update:busca': [value: string]
-  'update:filtro': [value: any]
+  'update:filtro': [value: FilterValue]
 }>()
 </script>
 

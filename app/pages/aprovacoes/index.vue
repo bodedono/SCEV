@@ -22,6 +22,7 @@ const carregarPendencias = async () => {
       .eq('status', 'PENDENTE_APROVACAO')
       .order('created_at', { ascending: false })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const empAprov: Aprovacao[] = (emps ?? []).map((e: any) => ({
       id: e.id,
       tipo: 'EMPRESTIMO' as const,
@@ -41,6 +42,7 @@ const carregarPendencias = async () => {
       .eq('status', 'PENDENTE_APROVACAO')
       .order('created_at', { ascending: false })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const valeAprov: Aprovacao[] = (vals ?? []).map((v: any) => ({
       id: v.id,
       tipo: 'VALE' as const,
@@ -87,19 +89,41 @@ onMounted(() => carregarPendencias())
 
 <template>
   <div>
-    <PageHeader titulo="Pendências de Aprovação" descricao="Empréstimos e vales aguardando sua aprovação" />
+    <PageHeader
+      titulo="Pendências de Aprovação"
+      descricao="Empréstimos e vales aguardando sua aprovação"
+    />
 
-    <div v-if="carregando" class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-      <UIcon name="i-lucide-loader-2" class="text-2xl animate-spin mb-3" />
-      <p class="text-sm">Carregando...</p>
+    <div
+      v-if="carregando"
+      class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500"
+    >
+      <UIcon
+        name="i-lucide-loader-2"
+        class="text-2xl animate-spin mb-3"
+      />
+      <p class="text-sm">
+        Carregando...
+      </p>
     </div>
 
-    <div v-else-if="pendencias.length === 0" class="flex flex-col items-center justify-center py-16">
-      <UIcon name="i-lucide-check-circle-2" class="text-4xl text-green-500 mb-3" />
-      <p class="text-gray-500">Nenhuma pendência de aprovação</p>
+    <div
+      v-else-if="pendencias.length === 0"
+      class="flex flex-col items-center justify-center py-16"
+    >
+      <UIcon
+        name="i-lucide-check-circle-2"
+        class="text-4xl text-green-500 mb-3"
+      />
+      <p class="text-gray-500">
+        Nenhuma pendência de aprovação
+      </p>
     </div>
 
-    <div v-else class="space-y-3">
+    <div
+      v-else
+      class="space-y-3"
+    >
       <AprovacaoCard
         v-for="item in pendencias"
         :key="`${item.tipo}-${item.id}`"

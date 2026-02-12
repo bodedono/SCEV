@@ -4,6 +4,7 @@ const { funcionarios, listar: listarFuncionarios } = useFuncionarios()
 const { criar } = useVales()
 const { comFeedback } = useToastFeedback()
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSalvar = async (dados: any) => {
   const result = await comFeedback(
     () => criar(dados),
@@ -21,7 +22,12 @@ onMounted(() => {
 <template>
   <div>
     <div class="mb-4">
-      <UButton icon="i-lucide-arrow-left" variant="ghost" color="neutral" to="/vales">
+      <UButton
+        icon="i-lucide-arrow-left"
+        variant="ghost"
+        color="neutral"
+        to="/vales"
+      >
         Voltar
       </UButton>
     </div>

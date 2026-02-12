@@ -44,7 +44,10 @@ onMounted(() => listarPendentes())
 
 <template>
   <div>
-    <PageHeader titulo="Parcelas Pendentes" descricao="Parcelas aguardando pagamento" />
+    <PageHeader
+      titulo="Parcelas Pendentes"
+      descricao="Parcelas aguardando pagamento"
+    />
 
     <DataTable
       :columns="columns"
@@ -58,7 +61,11 @@ onMounted(() => listarPendentes())
         <span class="font-medium">{{ row.funcionario?.nome }}</span>
       </template>
       <template #cell-tipo="{ row }">
-        <UBadge :color="row.tipo === 'EMPRESTIMO' ? 'info' : 'warning'" variant="subtle" size="xs">
+        <UBadge
+          :color="row.tipo === 'EMPRESTIMO' ? 'info' : 'warning'"
+          variant="subtle"
+          size="xs"
+        >
           {{ row.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}
         </UBadge>
       </template>
@@ -71,14 +78,23 @@ onMounted(() => listarPendentes())
       <template #cell-vencimento="{ row }">
         <span :class="isAtrasada(row) ? 'text-red-600 font-semibold' : 'text-gray-500'">
           {{ data(row.data_prevista) }}
-          <span v-if="isAtrasada(row)" class="ml-1 text-xs">ATRASADA</span>
+          <span
+            v-if="isAtrasada(row)"
+            class="ml-1 text-xs"
+          >ATRASADA</span>
         </span>
       </template>
       <template #cell-status="{ row }">
         <StatusBadge :status="isAtrasada(row) ? 'ATRASADA' : row.status" />
       </template>
       <template #cell-acao="{ row }">
-        <UButton size="xs" variant="soft" color="success" icon="i-lucide-check" @click="abrirBaixa(row)">
+        <UButton
+          size="xs"
+          variant="soft"
+          color="success"
+          icon="i-lucide-check"
+          @click="abrirBaixa(row)"
+        >
           Baixa
         </UButton>
       </template>
@@ -91,6 +107,10 @@ onMounted(() => listarPendentes())
       icon="i-lucide-info"
     />
 
-    <ParcelaBaixaModal v-model="modalBaixa" :parcela="parcelaSelecionada" @confirmar="handleBaixa" />
+    <ParcelaBaixaModal
+      v-model="modalBaixa"
+      :parcela="parcelaSelecionada"
+      @confirmar="handleBaixa"
+    />
   </div>
 </template>

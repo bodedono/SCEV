@@ -38,8 +38,14 @@ const sidebarAberta = ref(true)
     >
       <!-- Logo -->
       <div class="h-16 flex items-center px-4 border-b border-gray-200 dark:border-gray-800">
-        <UIcon name="i-lucide-building-2" class="text-primary text-xl shrink-0" />
-        <span v-if="sidebarAberta" class="ml-3 font-bold text-lg truncate">SCEV</span>
+        <UIcon
+          name="i-lucide-building-2"
+          class="text-primary text-xl shrink-0"
+        />
+        <span
+          v-if="sidebarAberta"
+          class="ml-3 font-bold text-lg truncate"
+        >SCEV</span>
       </div>
 
       <!-- Menu -->
@@ -51,18 +57,34 @@ const sidebarAberta = ref(true)
           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           active-class="!bg-primary/10 !text-primary"
         >
-          <UIcon :name="item.icon" class="text-lg shrink-0" />
-          <span v-if="sidebarAberta" class="truncate">{{ item.label }}</span>
+          <UIcon
+            :name="item.icon"
+            class="text-lg shrink-0"
+          />
+          <span
+            v-if="sidebarAberta"
+            class="truncate"
+          >{{ item.label }}</span>
         </NuxtLink>
       </nav>
 
       <!-- Usuário -->
       <div class="border-t border-gray-200 dark:border-gray-800 p-3">
-        <div v-if="sidebarAberta" class="flex items-center gap-3">
-          <UAvatar :label="usuario?.nome?.charAt(0) ?? 'U'" size="sm" />
+        <div
+          v-if="sidebarAberta"
+          class="flex items-center gap-3"
+        >
+          <UAvatar
+            :label="usuario?.nome?.charAt(0) ?? 'U'"
+            size="sm"
+          />
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium truncate">{{ usuario?.nome }}</p>
-            <p class="text-xs text-gray-500 truncate">{{ usuario?.perfil }}</p>
+            <p class="text-sm font-medium truncate">
+              {{ usuario?.nome }}
+            </p>
+            <p class="text-xs text-gray-500 truncate">
+              {{ usuario?.perfil }}
+            </p>
           </div>
           <UButton
             icon="i-lucide-log-out"

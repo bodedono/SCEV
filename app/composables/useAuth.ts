@@ -8,7 +8,10 @@ export const useAuth = () => {
   const perfilCarregado = useState<boolean>('auth-perfil-carregado', () => false)
 
   // useSupabaseUser() retorna o payload JWT onde o ID fica em "sub"
-  const userId = computed(() => (user.value as any)?.id ?? (user.value as any)?.sub ?? null)
+  const userId = computed(() => {
+    const u = user.value as { id?: string, sub?: string } | null
+    return u?.id ?? u?.sub ?? null
+  })
 
   const logado = computed(() => !!user.value)
   const perfil = computed(() => usuario.value?.perfil ?? null)

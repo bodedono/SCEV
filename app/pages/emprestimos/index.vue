@@ -16,7 +16,7 @@ const statusOptions = [
 ]
 
 const filtrados = computed(() => {
-  return emprestimos.value.filter(e => {
+  return emprestimos.value.filter((e) => {
     const matchBusca = !busca.value
       || e.funcionario?.nome.toLowerCase().includes(busca.value.toLowerCase())
     const matchStatus = !statusFiltro.value || e.status === statusFiltro.value
@@ -38,9 +38,16 @@ onMounted(() => listar())
 
 <template>
   <div>
-    <PageHeader titulo="Empréstimos" descricao="Gerenciamento de empréstimos">
+    <PageHeader
+      titulo="Empréstimos"
+      descricao="Gerenciamento de empréstimos"
+    >
       <template #acoes>
-        <UButton v-if="podeCadastrar" icon="i-lucide-plus" to="/emprestimos/novo">
+        <UButton
+          v-if="podeCadastrar"
+          icon="i-lucide-plus"
+          to="/emprestimos/novo"
+        >
           Novo Empréstimo
         </UButton>
       </template>
@@ -55,12 +62,22 @@ onMounted(() => listar())
       show-filter
     />
 
-    <DataTable :columns="columns" :data="filtrados" :loading="carregando" empty-text="Nenhum empréstimo encontrado">
+    <DataTable
+      :columns="columns"
+      :data="filtrados"
+      :loading="carregando"
+      empty-text="Nenhum empréstimo encontrado"
+    >
       <template #cell-funcionario="{ row }">
-        <NuxtLink :to="`/funcionarios/${row.funcionario_id}`" class="font-medium hover:text-primary transition-colors">
+        <NuxtLink
+          :to="`/funcionarios/${row.funcionario_id}`"
+          class="font-medium hover:text-primary transition-colors"
+        >
           {{ row.funcionario?.nome }}
         </NuxtLink>
-        <p class="text-xs text-gray-400">{{ row.funcionario?.matricula }}</p>
+        <p class="text-xs text-gray-400">
+          {{ row.funcionario?.matricula }}
+        </p>
       </template>
       <template #cell-unidade="{ row }">
         <span class="text-gray-500">{{ row.funcionario?.unidade?.nome }}</span>

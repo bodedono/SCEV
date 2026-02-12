@@ -30,36 +30,78 @@ const salvar = () => {
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent="salvar">
-    <UFormField label="Nome Completo" required>
-      <UInput v-model="form.nome" placeholder="Nome do funcionário" class="w-full" />
+  <form
+    class="space-y-4"
+    @submit.prevent="salvar"
+  >
+    <UFormField
+      label="Nome Completo"
+      required
+    >
+      <UInput
+        v-model="form.nome"
+        placeholder="Nome do funcionário"
+        class="w-full"
+      />
     </UFormField>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField label="Matrícula" required>
-        <UInput v-model="form.matricula" placeholder="Ex: 12345" />
+      <UFormField
+        label="Matrícula"
+        required
+      >
+        <UInput
+          v-model="form.matricula"
+          placeholder="Ex: 12345"
+        />
       </UFormField>
 
-      <UFormField label="Cargo/Função" required>
-        <UInput v-model="form.cargo" placeholder="Ex: Garçom" />
+      <UFormField
+        label="Cargo/Função"
+        required
+      >
+        <UInput
+          v-model="form.cargo"
+          placeholder="Ex: Garçom"
+        />
       </UFormField>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField label="Unidade" required>
-        <USelect v-model="form.unidade_id" :items="unidadeOptions" placeholder="Selecione a unidade" />
+      <UFormField
+        label="Unidade"
+        required
+      >
+        <USelect
+          v-model="form.unidade_id"
+          :items="unidadeOptions"
+          placeholder="Selecione a unidade"
+        />
       </UFormField>
 
-      <UFormField label="Data de Admissão" required>
-        <UInput v-model="form.data_admissao" type="date" />
+      <UFormField
+        label="Data de Admissão"
+        required
+      >
+        <UInput
+          v-model="form.data_admissao"
+          type="date"
+        />
       </UFormField>
     </div>
 
     <div class="flex justify-end gap-3 pt-4">
-      <UButton variant="outline" color="neutral" @click="emit('cancelar')">
+      <UButton
+        variant="outline"
+        color="neutral"
+        @click="emit('cancelar')"
+      >
         Cancelar
       </UButton>
-      <UButton type="submit" icon="i-lucide-check">
+      <UButton
+        type="submit"
+        icon="i-lucide-check"
+      >
         {{ props.funcionario ? 'Atualizar' : 'Cadastrar' }}
       </UButton>
     </div>

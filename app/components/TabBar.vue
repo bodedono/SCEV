@@ -28,7 +28,14 @@ defineEmits<{
       @click="$emit('update:modelValue', t.value)"
     >
       {{ t.label }}
-      <UBadge v-if="t.badge" size="xs" variant="subtle" class="ml-1">{{ t.badge }}</UBadge>
+      <UBadge
+        v-if="t.badge"
+        size="xs"
+        variant="subtle"
+        class="ml-1"
+      >
+        {{ t.badge }}
+      </UBadge>
     </UButton>
   </div>
 </template>

@@ -12,21 +12,13 @@ export default defineNuxtConfig({
 
   css: ['~/css/main.css'],
 
-  routeRules: {
-    '/': { prerender: false }
-  },
-
-  supabase: {
-    redirectOptions: {
-      login: '/login',
-      callback: '/confirm',
-      exclude: ['/login', '/setup']
-    }
-  },
-
   runtimeConfig: {
     supabaseServiceKey: process.env.SUPABASE_SECRET_KEY,
     groqApiKey: process.env.GROQ_API_KEY
+  },
+
+  routeRules: {
+    '/': { prerender: false }
   },
 
   compatibilityDate: '2025-01-15',
@@ -37,6 +29,14 @@ export default defineNuxtConfig({
         commaDangle: 'never',
         braceStyle: '1tbs'
       }
+    }
+  },
+
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      exclude: ['/login', '/setup']
     }
   }
 })

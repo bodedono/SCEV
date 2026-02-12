@@ -8,9 +8,15 @@ const tabs = [
 
 <template>
   <div>
-    <PageHeader titulo="Configurações" descricao="Gerenciar usuários e unidades" />
+    <PageHeader
+      titulo="Configurações"
+      descricao="Gerenciar usuários e unidades"
+    />
 
-    <TabBar v-model="tab" :tabs="tabs" />
+    <TabBar
+      v-model="tab"
+      :tabs="tabs"
+    />
 
     <ConfiguracoesUsuariosTab v-if="tab === 'usuarios'" />
     <ConfiguracoesUnidadesTab v-if="tab === 'unidades'" />

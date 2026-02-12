@@ -5,8 +5,10 @@ export const useToastFeedback = () => {
     toast.add({ title, description, color: 'success' })
   }
 
-  const erro = (title: string, error?: any) => {
-    const description = error?.data?.message || error?.message || 'Erro desconhecido'
+  const erro = (title: string, error?: unknown) => {
+    const err = error as Record<string, unknown> | undefined
+    const data = err?.data as Record<string, unknown> | undefined
+    const description = (data?.message as string) || (err?.message as string) || 'Erro desconhecido'
     toast.add({ title, description, color: 'error' })
   }
 
@@ -23,7 +25,7 @@ export const useToastFeedback = () => {
       const result = await action()
       sucesso(mensagemSucesso)
       return result
-    } catch (e: any) {
+    } catch (e: unknown) {
       erro(mensagemErro, e)
       return null
     }

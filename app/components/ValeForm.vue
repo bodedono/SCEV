@@ -52,8 +52,14 @@ const salvar = () => {
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent="salvar">
-    <UFormField label="Funcionário" required>
+  <form
+    class="space-y-4"
+    @submit.prevent="salvar"
+  >
+    <UFormField
+      label="Funcionário"
+      required
+    >
       <USelect
         v-model="form.funcionario_id"
         :items="funcionarioOptions"
@@ -63,16 +69,35 @@ const salvar = () => {
     </UFormField>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField label="Valor (R$)" required>
-        <UInput v-model.number="form.valor" type="number" min="0.01" step="0.01" placeholder="0,00" />
+      <UFormField
+        label="Valor (R$)"
+        required
+      >
+        <UInput
+          v-model.number="form.valor"
+          type="number"
+          min="0.01"
+          step="0.01"
+          placeholder="0,00"
+        />
       </UFormField>
 
-      <UFormField label="Data do Ocorrido" required>
-        <UInput v-model="form.data_ocorrido" type="date" />
+      <UFormField
+        label="Data do Ocorrido"
+        required
+      >
+        <UInput
+          v-model="form.data_ocorrido"
+          type="date"
+        />
       </UFormField>
     </div>
 
-    <UFormField label="Comentário / Motivo" required hint="Obrigatório - descreva o que aconteceu">
+    <UFormField
+      label="Comentário / Motivo"
+      required
+      hint="Obrigatório - descreva o que aconteceu"
+    >
       <UTextarea
         v-model="form.comentario"
         placeholder="Ex: Mesa 15 - cliente saiu sem pagar conta de R$ 87,50"
@@ -80,23 +105,51 @@ const salvar = () => {
       />
     </UFormField>
 
-    <UFormField label="Referência" hint="Opcional - nº comanda, mesa, etc.">
-      <UInput v-model="form.referencia" placeholder="Ex: Comanda 1234, Mesa 15" />
+    <UFormField
+      label="Referência"
+      hint="Opcional - nº comanda, mesa, etc."
+    >
+      <UInput
+        v-model="form.referencia"
+        placeholder="Ex: Comanda 1234, Mesa 15"
+      />
     </UFormField>
 
-    <UFormField label="Forma de Desconto" required>
-      <USelect v-model="form.forma_desconto" :items="formaDescontoOptions" />
+    <UFormField
+      label="Forma de Desconto"
+      required
+    >
+      <USelect
+        v-model="form.forma_desconto"
+        :items="formaDescontoOptions"
+      />
     </UFormField>
 
-    <UFormField v-if="form.forma_desconto === 'PARCELAS'" label="Número de Parcelas" required>
-      <UInput v-model.number="form.num_parcelas" type="number" min="1" step="1" />
+    <UFormField
+      v-if="form.forma_desconto === 'PARCELAS'"
+      label="Número de Parcelas"
+      required
+    >
+      <UInput
+        v-model.number="form.num_parcelas"
+        type="number"
+        min="1"
+        step="1"
+      />
     </UFormField>
 
     <div class="flex justify-end gap-3 pt-4">
-      <UButton variant="outline" color="neutral" @click="emit('cancelar')">
+      <UButton
+        variant="outline"
+        color="neutral"
+        @click="emit('cancelar')"
+      >
         Cancelar
       </UButton>
-      <UButton type="submit" icon="i-lucide-check">
+      <UButton
+        type="submit"
+        icon="i-lucide-check"
+      >
         Cadastrar Vale
       </UButton>
     </div>

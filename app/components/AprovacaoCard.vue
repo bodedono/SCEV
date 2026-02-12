@@ -21,13 +21,20 @@ const { moeda, data } = useFormatters()
         class="flex items-center justify-center w-10 h-10 rounded-lg shrink-0"
         :class="item.tipo === 'EMPRESTIMO' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400' : 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-400'"
       >
-        <UIcon :name="item.tipo === 'EMPRESTIMO' ? 'i-lucide-banknote' : 'i-lucide-receipt'" class="text-lg" />
+        <UIcon
+          :name="item.tipo === 'EMPRESTIMO' ? 'i-lucide-banknote' : 'i-lucide-receipt'"
+          class="text-lg"
+        />
       </div>
 
       <!-- Info -->
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2">
-          <UBadge :color="item.tipo === 'EMPRESTIMO' ? 'info' : 'warning'" variant="subtle" size="xs">
+          <UBadge
+            :color="item.tipo === 'EMPRESTIMO' ? 'info' : 'warning'"
+            variant="subtle"
+            size="xs"
+          >
             {{ item.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}
           </UBadge>
         </div>
