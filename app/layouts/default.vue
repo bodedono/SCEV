@@ -125,5 +125,8 @@ const sidebarAberta = ref(true)
         <slot />
       </main>
     </div>
+
+    <!-- Chat flutuante -->
+    <ChatWidget />
   </div>
 </template>

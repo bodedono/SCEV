@@ -130,3 +130,10 @@ export interface Aprovacao {
   data: string
   solicitante: Usuario
 }
+
+export interface MensagemChat {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
+}
