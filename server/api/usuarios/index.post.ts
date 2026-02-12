@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   await verificarAdmin(event)
 
   const body = await readBody(event)
-  const { nome, email, senha, perfil, unidade_id, auto_confirmar } = body
+  const { nome, email, cpf, senha, perfil, unidade_id, auto_confirmar } = body
 
   if (!nome?.trim()) {
     throw createError({ statusCode: 400, message: 'Nome é obrigatório' })
@@ -17,6 +17,14 @@ export default defineEventHandler(async (event) => {
   }
   if (!['ADMIN', 'GESTOR', 'OPERADOR'].includes(perfil)) {
     throw createError({ statusCode: 400, message: 'Perfil inválido' })
+  }
+
+  // Validar CPF se fornecido
+  if (cpf) {
+    const cpfLimpo = cpf.replace(/\D/g, '')
+    if (cpfLimpo.length !== 11) {
+      throw createError({ statusCode: 400, message: 'CPF deve ter 11 dígitos' })
+    }
   }
 
   const supabase = serverSupabaseServiceRole(event)
@@ -42,6 +50,7 @@ export default defineEventHandler(async (event) => {
       id: authData.user.id,
       nome: nome.trim(),
       email: email.trim(),
+      cpf: cpf ? cpf.replace(/\D/g, '') : null,
       perfil,
       unidade_id: unidade_id || null,
       ativo: true

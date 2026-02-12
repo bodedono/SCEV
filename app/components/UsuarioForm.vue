@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Usuario, PerfilUsuario, Unidade } from '~/types'
+import { validarCPF, formatarCPF, limparCPF } from '~/utils/cpf'
 
 const props = defineProps<{
   usuario?: Usuario
@@ -17,11 +18,38 @@ const isEdicao = computed(() => !!props.usuario)
 const form = reactive({
   nome: props.usuario?.nome ?? '',
   email: props.usuario?.email ?? '',
+  cpf: props.usuario?.cpf ? formatarCPF(props.usuario.cpf) : '',
   senha: '',
   perfil: (props.usuario?.perfil ?? 'OPERADOR') as PerfilUsuario,
   unidade_id: props.usuario?.unidade_id ?? (undefined as number | undefined),
   auto_confirmar: true
 })
+
+const cpfErro = ref('')
+
+const onCpfInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  form.cpf = formatarCPF(input.value)
+  cpfErro.value = ''
+}
+
+const validarCpfField = () => {
+  if (!form.cpf) {
+    cpfErro.value = ''
+    return true
+  }
+  const numeros = limparCPF(form.cpf)
+  if (numeros.length > 0 && numeros.length < 11) {
+    cpfErro.value = 'CPF incompleto'
+    return false
+  }
+  if (numeros.length === 11 && !validarCPF(numeros)) {
+    cpfErro.value = 'CPF inválido'
+    return false
+  }
+  cpfErro.value = ''
+  return true
+}
 
 const perfilOptions = [
   { label: 'Administrador', value: 'ADMIN' },
@@ -37,17 +65,25 @@ const unidadeOptions = computed(() => [
 const salvar = () => {
   if (!form.nome.trim() || !form.email.trim()) return
   if (!isEdicao.value && form.senha.length < 6) return
-  emit('salvar', { ...form })
+  if (!validarCpfField()) return
+
+  const dados = {
+    ...form,
+    cpf: limparCPF(form.cpf) || null
+  }
+  emit('salvar', dados)
 }
 
 // Reset form quando o usuario muda (abrir modal com dados diferentes)
 watch(() => props.usuario, (usr) => {
   form.nome = usr?.nome ?? ''
   form.email = usr?.email ?? ''
+  form.cpf = usr?.cpf ? formatarCPF(usr.cpf) : ''
   form.senha = ''
   form.perfil = usr?.perfil ?? 'OPERADOR'
   form.unidade_id = usr?.unidade_id ?? undefined
   form.auto_confirmar = true
+  cpfErro.value = ''
 })
 </script>
 
@@ -77,6 +113,21 @@ watch(() => props.usuario, (usr) => {
         placeholder="email@exemplo.com"
         class="w-full"
         :disabled="isEdicao"
+      />
+    </UFormField>
+
+    <UFormField
+      label="CPF"
+      :error="cpfErro"
+    >
+      <UInput
+        :model-value="form.cpf"
+        placeholder="000.000.000-00"
+        icon="i-lucide-fingerprint"
+        class="w-full"
+        maxlength="14"
+        @input="onCpfInput"
+        @blur="validarCpfField"
       />
     </UFormField>
 

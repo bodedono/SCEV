@@ -18,6 +18,7 @@ export interface Usuario {
   id: string
   nome: string
   email: string
+  cpf: string | null
   perfil: PerfilUsuario
   unidade_id: number | null
   unidade?: Unidade
@@ -29,6 +30,7 @@ export interface Usuario {
 export interface UsuarioFormData {
   nome: string
   email: string
+  cpf: string
   senha: string
   perfil: PerfilUsuario
   unidade_id: number | null
@@ -37,6 +39,7 @@ export interface UsuarioFormData {
 
 export interface UsuarioUpdateData {
   nome?: string
+  cpf?: string | null
   perfil?: PerfilUsuario
   unidade_id?: number | null
   ativo?: boolean

@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event)
-  const { nome, email, perfil, unidade_id, ativo } = body
+  const { nome, email, cpf, perfil, unidade_id, ativo } = body
 
   if (perfil && !['ADMIN', 'GESTOR', 'OPERADOR'].includes(perfil)) {
     throw createError({ statusCode: 400, message: 'Perfil inválido' })
@@ -35,6 +35,7 @@ export default defineEventHandler(async (event) => {
   const updateData: Record<string, any> = {}
   if (nome !== undefined) updateData.nome = nome.trim()
   if (email !== undefined) updateData.email = email.trim()
+  if (cpf !== undefined) updateData.cpf = cpf ? cpf.replace(/\D/g, '') : null
   if (perfil !== undefined) updateData.perfil = perfil
   if (unidade_id !== undefined) updateData.unidade_id = unidade_id || null
   if (ativo !== undefined) updateData.ativo = ativo

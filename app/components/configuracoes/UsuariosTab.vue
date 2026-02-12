@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Usuario } from '~/types'
+import { formatarCPF } from '~/utils/cpf'
 
 const { usuario: currentUser } = useAuth()
 const { unidades, listar: listarUnidades } = useUnidades()
@@ -24,6 +25,7 @@ const filtrados = computed(() => {
   return usuarios.value.filter(u =>
     u.nome.toLowerCase().includes(termo)
     || u.email.toLowerCase().includes(termo)
+    || (u.cpf && u.cpf.includes(termo.replace(/\D/g, '')))
   )
 })
 
@@ -55,6 +57,7 @@ const handleSalvarUsuario = async (dados: any) => {
       await comFeedback(
         () => atualizarUsuario(modalUsuario.item.value!.id, {
           nome: dados.nome,
+          cpf: dados.cpf,
           perfil: dados.perfil,
           unidade_id: dados.unidade_id || null
         }),
@@ -114,6 +117,7 @@ const handleResetSenha = async () => {
 const columns = [
   { key: 'nome', label: 'Nome' },
   { key: 'email', label: 'Email' },
+  { key: 'cpf', label: 'CPF' },
   { key: 'perfil', label: 'Perfil' },
   { key: 'unidade', label: 'Unidade' },
   { key: 'status', label: 'Status' },
@@ -162,6 +166,9 @@ onMounted(async () => {
       </template>
       <template #cell-email="{ row }">
         <span class="text-gray-500">{{ row.email }}</span>
+      </template>
+      <template #cell-cpf="{ row }">
+        <span class="text-gray-500 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
       </template>
       <template #cell-perfil="{ row }">
         <UBadge
