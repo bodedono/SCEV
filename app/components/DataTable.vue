@@ -46,7 +46,7 @@ const getRowClass = (row: Row, rowClass?: string | ((row: Row) => string)) => {
 
   <div
     v-else
-    class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden"
+    class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-x-auto"
   >
     <table class="w-full text-sm">
       <thead class="bg-gray-50/80 dark:bg-gray-800/50">

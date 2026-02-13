@@ -37,7 +37,7 @@ const columns = [
   { key: 'cargo', label: 'Cargo' },
   { key: 'status', label: 'Status' },
   { key: 'saldo_devedor', label: 'Saldo Devedor' },
-  { key: 'acoes', label: '' }
+  { key: 'acoes', label: '', headerClass: 'w-14', class: 'w-14 text-center' }
 ]
 
 // Criar funcionário

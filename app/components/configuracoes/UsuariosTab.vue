@@ -208,7 +208,7 @@ const columns = [
   { key: 'perfil', label: 'Perfil' },
   { key: 'unidade', label: 'Unidade' },
   { key: 'status', label: 'Status' },
-  { key: 'acoes', label: '' }
+  { key: 'acoes', label: '', headerClass: 'w-14', class: 'w-14 text-center' }
 ]
 
 onMounted(async () => {
