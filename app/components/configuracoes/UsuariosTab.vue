@@ -207,8 +207,7 @@ const columns = [
   { key: 'cpf', label: 'CPF' },
   { key: 'perfil', label: 'Perfil' },
   { key: 'unidade', label: 'Unidade' },
-  { key: 'status', label: 'Status' },
-  { key: 'acoes', label: '', headerClass: 'w-14', class: 'w-14 text-center' }
+  { key: 'status', label: 'Status' }
 ]
 
 onMounted(async () => {
@@ -243,13 +242,22 @@ onMounted(async () => {
       empty-text="Nenhum usuário encontrado"
     >
       <template #cell-nome="{ row }">
-        <span class="font-medium">
-          {{ row.nome }}
-          <span
-            v-if="row.id === currentUser?.id"
-            class="ml-1 text-xs text-gray-400"
-          >(você)</span>
-        </span>
+        <div class="flex items-center gap-2">
+          <span class="font-medium flex-1 truncate">
+            {{ row.nome }}
+            <span
+              v-if="row.id === currentUser?.id"
+              class="ml-1 text-xs text-gray-400"
+            >(você)</span>
+          </span>
+          <UButton
+            icon="i-lucide-eye"
+            variant="ghost"
+            color="neutral"
+            size="xs"
+            @click.stop="abrirDetalhe(row)"
+          />
+        </div>
       </template>
       <template #cell-email="{ row }">
         <span class="text-gray-500">{{ row.email }}</span>
@@ -277,17 +285,6 @@ onMounted(async () => {
         >
           {{ row.ativo ? 'Ativo' : 'Inativo' }}
         </UBadge>
-      </template>
-      <template #cell-acoes="{ row }">
-        <UTooltip text="Ver detalhes">
-          <UButton
-            icon="i-lucide-eye"
-            variant="ghost"
-            color="neutral"
-            size="xs"
-            @click="abrirDetalhe(row)"
-          />
-        </UTooltip>
       </template>
     </DataTable>
 

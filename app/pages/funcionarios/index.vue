@@ -36,8 +36,7 @@ const columns = [
   { key: 'unidade', label: 'Unidade' },
   { key: 'cargo', label: 'Cargo' },
   { key: 'status', label: 'Status' },
-  { key: 'saldo_devedor', label: 'Saldo Devedor' },
-  { key: 'acoes', label: '', headerClass: 'w-14', class: 'w-14 text-center' }
+  { key: 'saldo_devedor', label: 'Saldo Devedor' }
 ]
 
 // Criar funcionário
@@ -254,7 +253,16 @@ onMounted(async () => {
       empty-text="Nenhum funcionário encontrado"
     >
       <template #cell-nome="{ row }">
-        <span class="font-medium">{{ row.nome }}</span>
+        <div class="flex items-center gap-2">
+          <span class="font-medium flex-1 truncate">{{ row.nome }}</span>
+          <UButton
+            icon="i-lucide-eye"
+            variant="ghost"
+            color="neutral"
+            size="xs"
+            @click.stop="abrirDetalhe(row)"
+          />
+        </div>
       </template>
       <template #cell-cpf="{ row }">
         <span class="text-gray-500 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
@@ -284,17 +292,6 @@ onMounted(async () => {
         >
           {{ moeda(row.saldo_devedor ?? 0) }}
         </span>
-      </template>
-      <template #cell-acoes="{ row }">
-        <UTooltip text="Ver detalhes">
-          <UButton
-            icon="i-lucide-eye"
-            variant="ghost"
-            color="neutral"
-            size="xs"
-            @click="abrirDetalhe(row)"
-          />
-        </UTooltip>
       </template>
     </DataTable>
 
