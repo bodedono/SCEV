@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Funcionario, Unidade } from '~/types'
+import { validarCPF, formatarCPF, limparCPF } from '~/utils/cpf'
 
 const props = defineProps<{
   funcionario?: Funcionario
@@ -13,6 +14,7 @@ const emit = defineEmits<{
 
 const form = reactive({
   nome: props.funcionario?.nome ?? '',
+  cpf: props.funcionario?.cpf ? formatarCPF(props.funcionario.cpf) : '',
   matricula: props.funcionario?.matricula ?? '',
   unidade_id: props.funcionario?.unidade_id ?? undefined as number | undefined,
   cargo: props.funcionario?.cargo ?? '',
@@ -20,12 +22,39 @@ const form = reactive({
   ativo: props.funcionario?.ativo ?? true
 })
 
+const cpfErro = ref('')
+
+const onCpfInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  form.cpf = formatarCPF(input.value)
+  cpfErro.value = ''
+}
+
+const validarCpfField = () => {
+  if (!form.cpf) {
+    cpfErro.value = ''
+    return true
+  }
+  const numeros = limparCPF(form.cpf)
+  if (numeros.length > 0 && numeros.length < 11) {
+    cpfErro.value = 'CPF incompleto'
+    return false
+  }
+  if (numeros.length === 11 && !validarCPF(numeros)) {
+    cpfErro.value = 'CPF inválido'
+    return false
+  }
+  cpfErro.value = ''
+  return true
+}
+
 const unidadeOptions = computed(() =>
   props.unidades.map(u => ({ label: u.nome, value: u.id }))
 )
 
 const salvar = () => {
-  emit('salvar', { ...form })
+  if (!validarCpfField()) return
+  emit('salvar', { ...form, cpf: limparCPF(form.cpf) || null })
 }
 </script>
 
@@ -42,6 +71,21 @@ const salvar = () => {
         v-model="form.nome"
         placeholder="Nome do funcionário"
         class="w-full"
+      />
+    </UFormField>
+
+    <UFormField
+      label="CPF"
+      :error="cpfErro"
+    >
+      <UInput
+        :model-value="form.cpf"
+        placeholder="000.000.000-00"
+        icon="i-lucide-fingerprint"
+        class="w-full"
+        maxlength="14"
+        @input="onCpfInput"
+        @blur="validarCpfField"
       />
     </UFormField>
 

@@ -48,6 +48,7 @@ export interface UsuarioUpdateData {
 export interface Funcionario {
   id: number
   nome: string
+  cpf: string | null
   matricula: string
   unidade_id: number
   unidade?: Unidade

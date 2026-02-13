@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatarCPF } from '~/utils/cpf'
+
 const { isAdmin, isGestor, unidadeId } = useAuth()
 const { moeda } = useFormatters()
 const { funcionarios, carregando, listar } = useFuncionarios()
@@ -18,6 +20,7 @@ const filtrados = computed(() => {
     const matchBusca = !busca.value
       || f.nome.toLowerCase().includes(busca.value.toLowerCase())
       || f.matricula.includes(busca.value)
+      || (f.cpf && f.cpf.includes(busca.value.replace(/\D/g, '')))
     const matchUnidade = !unidadeFiltro.value || f.unidade_id === unidadeFiltro.value
     return matchBusca && matchUnidade
   })
@@ -25,6 +28,7 @@ const filtrados = computed(() => {
 
 const columns = [
   { key: 'nome', label: 'Nome' },
+  { key: 'cpf', label: 'CPF' },
   { key: 'matricula', label: 'Matrícula' },
   { key: 'unidade', label: 'Unidade' },
   { key: 'cargo', label: 'Cargo' },
@@ -91,6 +95,9 @@ onMounted(async () => {
     >
       <template #cell-nome="{ row }">
         <span class="font-medium">{{ row.nome }}</span>
+      </template>
+      <template #cell-cpf="{ row }">
+        <span class="text-gray-500 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
       </template>
       <template #cell-matricula="{ row }">
         <span class="text-gray-500">{{ row.matricula }}</span>
