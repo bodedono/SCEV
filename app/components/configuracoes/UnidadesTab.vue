@@ -65,23 +65,21 @@ onMounted(() => listarUnidades())
       </p>
     </div>
 
-    <UModal v-model:open="modalUnidade">
-      <template #header>
-        <h3 class="text-lg font-semibold">
-          Nova Unidade
-        </h3>
-      </template>
-      <template #body>
-        <UFormField
-          label="Nome da Unidade"
-          required
-        >
-          <UInput
-            v-model="novaUnidade.nome"
-            placeholder="Ex: Bode do Nô"
-          />
-        </UFormField>
-      </template>
+    <AppModal
+      v-model:open="modalUnidade"
+      title="Nova Unidade"
+      icon="i-lucide-building-2"
+    >
+      <UFormField
+        label="Nome da Unidade"
+        required
+      >
+        <UInput
+          v-model="novaUnidade.nome"
+          placeholder="Ex: Bode do Nô"
+        />
+      </UFormField>
+
       <template #footer>
         <div class="flex justify-end gap-2">
           <UButton
@@ -99,6 +97,6 @@ onMounted(() => listarUnidades())
           </UButton>
         </div>
       </template>
-    </UModal>
+    </AppModal>
   </div>
 </template>

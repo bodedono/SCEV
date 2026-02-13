@@ -135,19 +135,16 @@ onMounted(async () => {
       </template>
     </DataTable>
 
-    <UModal v-model:open="modalCadastro">
-      <template #header>
-        <h3 class="text-lg font-semibold">
-          Novo Funcionário
-        </h3>
-      </template>
-      <template #body>
-        <FuncionarioForm
-          :unidades="unidades"
-          @salvar="handleSalvar"
-          @cancelar="modalCadastro = false"
-        />
-      </template>
-    </UModal>
+    <AppModal
+      v-model:open="modalCadastro"
+      title="Novo Funcionário"
+      icon="i-lucide-user-plus"
+    >
+      <FuncionarioForm
+        :unidades="unidades"
+        @salvar="handleSalvar"
+        @cancelar="modalCadastro = false"
+      />
+    </AppModal>
   </div>
 </template>

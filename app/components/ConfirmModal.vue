@@ -16,26 +16,21 @@ defineEmits<{
 </script>
 
 <template>
-  <UModal v-model:open="model">
-    <template #header>
-      <h3
-        class="text-lg font-semibold"
-        :class="destructive ? 'text-red-600 dark:text-red-400' : ''"
+  <AppModal
+    v-model:open="model"
+    :title="title"
+    :destructive="destructive"
+  >
+    <div class="space-y-3">
+      <p>{{ message }}</p>
+      <p
+        v-if="detail"
+        class="text-sm text-gray-500 dark:text-gray-400"
       >
-        {{ title }}
-      </h3>
-    </template>
-    <template #body>
-      <div class="space-y-3">
-        <p>{{ message }}</p>
-        <p
-          v-if="detail"
-          class="text-sm text-gray-500 dark:text-gray-400"
-        >
-          {{ detail }}
-        </p>
-      </div>
-    </template>
+        {{ detail }}
+      </p>
+    </div>
+
     <template #footer>
       <div class="flex justify-end gap-2">
         <UButton
@@ -55,5 +50,5 @@ defineEmits<{
         </UButton>
       </div>
     </template>
-  </UModal>
+  </AppModal>
 </template>
