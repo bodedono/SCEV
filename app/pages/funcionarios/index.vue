@@ -4,7 +4,7 @@ import { formatarCPF, validarCPF, limparCPF } from '~/utils/cpf'
 
 const { isAdmin, isGestor, unidadeId } = useAuth()
 const { moeda, data: formatarData } = useFormatters()
-const { funcionarios, carregando, listar, buscarComSaldo, atualizar, desativar } = useFuncionarios()
+const { funcionarios, carregando, listar, buscarComSaldo, atualizar, desativar, excluir } = useFuncionarios()
 const { unidades, listar: listarUnidades } = useUnidades()
 const { comFeedback } = useToastFeedback()
 
@@ -54,7 +54,7 @@ const handleCriar = async (dados: any) => {
 
 // Modal ficha completa
 const modalDetalhe = useModalState<Funcionario>()
-type ModoDetalhe = 'ver' | 'editar' | 'desativar'
+type ModoDetalhe = 'ver' | 'editar' | 'desativar' | 'excluir'
 const modo = ref<ModoDetalhe>('ver')
 const carregandoDetalhe = ref(false)
 const emprestimos = ref<Emprestimo[]>([])
@@ -194,18 +194,32 @@ const handleDesativar = async () => {
   await recarregar()
 }
 
+// Excluir permanentemente
+const handleExcluir = async () => {
+  if (!modalDetalhe.item.value) return
+  await comFeedback(
+    () => excluir(modalDetalhe.item.value!.id),
+    'Funcionário excluído permanentemente',
+    'Erro ao excluir funcionário'
+  )
+  modalDetalhe.fechar()
+  await recarregar()
+}
+
 // Helpers
 const recarregar = () => listar(isGestor.value ? unidadeId.value ?? undefined : undefined)
 
 const tituloDetalhe = computed(() => {
   if (modo.value === 'editar') return 'Editar Funcionário'
   if (modo.value === 'desativar') return 'Desativar Funcionário'
+  if (modo.value === 'excluir') return 'Excluir Funcionário'
   return modalDetalhe.item.value?.nome ?? 'Funcionário'
 })
 
 const iconeDetalhe = computed(() => {
   if (modo.value === 'editar') return 'i-lucide-pencil'
   if (modo.value === 'desativar') return 'i-lucide-user-x'
+  if (modo.value === 'excluir') return 'i-lucide-trash-2'
   return 'i-lucide-user'
 })
 
@@ -313,7 +327,7 @@ onMounted(async () => {
       v-model:open="modalDetalhe.aberto.value"
       :title="tituloDetalhe"
       :icon="iconeDetalhe"
-      :destructive="modo === 'desativar'"
+      :destructive="modo === 'desativar' || modo === 'excluir'"
       size="lg"
     >
       <template v-if="modalDetalhe.item.value">
@@ -573,6 +587,29 @@ onMounted(async () => {
             </p>
           </div>
         </div>
+
+        <!-- MODO EXCLUIR -->
+        <div
+          v-else-if="modo === 'excluir'"
+          class="space-y-4"
+        >
+          <div class="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
+            <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-2">
+              <UIcon
+                name="i-lucide-trash-2"
+                class="text-lg"
+              />
+              <span class="font-medium">Exclusão permanente</span>
+            </div>
+            <p class="text-sm text-red-600 dark:text-red-400">
+              Tem certeza que deseja excluir <strong>{{ modalDetalhe.item.value.nome }}</strong> permanentemente?
+            </p>
+            <p class="text-xs text-red-500 mt-2">
+              Esta ação é irreversível. Todos os dados do funcionário serão apagados do banco de dados,
+              incluindo o histórico de empréstimos e vales associados.
+            </p>
+          </div>
+        </div>
       </template>
 
       <!-- FOOTER dinâmico -->
@@ -596,6 +633,15 @@ onMounted(async () => {
               @click="modo = 'desativar'"
             >
               Desativar
+            </UButton>
+            <UButton
+              v-if="isAdmin"
+              icon="i-lucide-trash-2"
+              variant="soft"
+              color="error"
+              @click="modo = 'excluir'"
+            >
+              Excluir
             </UButton>
           </template>
 
@@ -633,6 +679,24 @@ onMounted(async () => {
               @click="handleDesativar"
             >
               Confirmar Desativação
+            </UButton>
+          </template>
+
+          <!-- Modo EXCLUIR -->
+          <template v-else-if="modo === 'excluir'">
+            <UButton
+              variant="outline"
+              color="neutral"
+              @click="modo = 'ver'"
+            >
+              Cancelar
+            </UButton>
+            <UButton
+              icon="i-lucide-trash-2"
+              color="error"
+              @click="handleExcluir"
+            >
+              Excluir Permanentemente
             </UButton>
           </template>
         </div>

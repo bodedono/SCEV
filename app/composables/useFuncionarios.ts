@@ -82,6 +82,15 @@ export const useFuncionarios = () => {
     if (error) throw error
   }
 
+  const excluir = async (id: number) => {
+    const { error } = await supabase
+      .from('funcionarios')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+  }
+
   return {
     funcionarios,
     carregando,
@@ -90,6 +99,7 @@ export const useFuncionarios = () => {
     buscarComSaldo,
     criar,
     atualizar,
-    desativar
+    desativar,
+    excluir
   }
 }
