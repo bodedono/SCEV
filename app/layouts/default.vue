@@ -10,6 +10,12 @@ const menuPrincipal = computed(() => {
     { label: 'Parcelas', icon: 'i-lucide-calendar-check', to: '/parcelas' }
   ]
 
+  if (isAdmin.value || isGestor.value) {
+    items.push(
+      { label: 'Analytics', icon: 'i-lucide-bar-chart-3', to: '/analytics' }
+    )
+  }
+
   if (isAdmin.value) {
     items.push(
       { label: 'Aprovações', icon: 'i-lucide-check-circle', to: '/aprovacoes' },

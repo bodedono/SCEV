@@ -203,10 +203,10 @@ const iconeDetalhe = computed(() => {
 // Colunas
 const columns = [
   { key: 'nome', label: 'Nome' },
-  { key: 'email', label: 'Email' },
-  { key: 'cpf', label: 'CPF' },
+  { key: 'email', label: 'Email', hideBelow: 'md' as const },
+  { key: 'cpf', label: 'CPF', hideBelow: 'lg' as const },
   { key: 'perfil', label: 'Perfil' },
-  { key: 'unidade', label: 'Unidade' },
+  { key: 'unidade', label: 'Unidade', hideBelow: 'md' as const },
   { key: 'status', label: 'Status' }
 ]
 

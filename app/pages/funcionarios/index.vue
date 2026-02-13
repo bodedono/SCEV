@@ -31,10 +31,10 @@ const filtrados = computed(() => {
 
 const columns = [
   { key: 'nome', label: 'Nome' },
-  { key: 'cpf', label: 'CPF' },
-  { key: 'matricula', label: 'Matrícula' },
-  { key: 'unidade', label: 'Unidade' },
-  { key: 'cargo', label: 'Cargo' },
+  { key: 'cpf', label: 'CPF', hideBelow: 'lg' as const },
+  { key: 'matricula', label: 'Matrícula', hideBelow: 'md' as const },
+  { key: 'unidade', label: 'Unidade', hideBelow: 'md' as const },
+  { key: 'cargo', label: 'Cargo', hideBelow: 'lg' as const },
   { key: 'status', label: 'Status' },
   { key: 'saldo_devedor', label: 'Saldo Devedor' }
 ]

@@ -4,6 +4,7 @@ interface DataTableColumn {
   label: string
   class?: string
   headerClass?: string
+  hideBelow?: 'sm' | 'md' | 'lg'
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,6 +28,16 @@ defineEmits<{
 const getRowClass = (row: Row, rowClass?: string | ((row: Row) => string)) => {
   if (!rowClass) return ''
   return typeof rowClass === 'function' ? rowClass(row) : rowClass
+}
+
+const hideClass = (col: DataTableColumn) => {
+  if (!col.hideBelow) return ''
+  const map: Record<string, string> = {
+    sm: 'hidden sm:table-cell',
+    md: 'hidden md:table-cell',
+    lg: 'hidden lg:table-cell'
+  }
+  return map[col.hideBelow] ?? ''
 }
 </script>
 
@@ -55,7 +66,7 @@ const getRowClass = (row: Row, rowClass?: string | ((row: Row) => string)) => {
             v-for="col in columns"
             :key="col.key"
             class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-            :class="col.headerClass"
+            :class="[col.headerClass, hideClass(col)]"
           >
             {{ col.label }}
           </th>
@@ -89,7 +100,7 @@ const getRowClass = (row: Row, rowClass?: string | ((row: Row) => string)) => {
             v-for="col in columns"
             :key="col.key"
             class="px-4 py-3"
-            :class="col.class"
+            :class="[col.class, hideClass(col)]"
           >
             <slot
               :name="`cell-${col.key}`"
