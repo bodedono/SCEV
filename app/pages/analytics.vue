@@ -53,9 +53,9 @@ onMounted(async () => {
     <!-- Loading -->
     <div
       v-if="carregando"
-      class="flex flex-col items-center justify-center py-24 text-gray-400"
+      class="flex flex-col items-center justify-center py-24 text-stone-400"
     >
-      <UIcon
+      <AppIcon
         name="i-lucide-loader-2"
         class="text-3xl animate-spin mb-3"
       />
@@ -72,12 +72,15 @@ onMounted(async () => {
 
       <!-- Resumo extra -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 flex items-center gap-3">
-          <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400">
-            <UIcon name="i-lucide-calculator" />
+        <div class="card p-4 flex items-center gap-3">
+          <div class="flex items-center justify-center w-9 h-9 rounded-lg icon-box-emprestimo">
+            <AppIcon name="i-lucide-calculator" />
           </div>
           <div>
-            <p class="text-xs text-gray-500">
+            <p
+              class="text-xs"
+              style="color: var(--text-secondary);"
+            >
               Ticket Médio Empréstimo
             </p>
             <p class="font-bold">
@@ -85,12 +88,15 @@ onMounted(async () => {
             </p>
           </div>
         </div>
-        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 flex items-center gap-3">
-          <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-400">
-            <UIcon name="i-lucide-calculator" />
+        <div class="card p-4 flex items-center gap-3">
+          <div class="flex items-center justify-center w-9 h-9 rounded-lg icon-box-vale">
+            <AppIcon name="i-lucide-calculator" />
           </div>
           <div>
-            <p class="text-xs text-gray-500">
+            <p
+              class="text-xs"
+              style="color: var(--text-secondary);"
+            >
               Ticket Médio Vale
             </p>
             <p class="font-bold">
@@ -98,15 +104,18 @@ onMounted(async () => {
             </p>
           </div>
         </div>
-        <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 flex items-center gap-3">
-          <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400">
-            <UIcon name="i-lucide-wallet" />
+        <div class="card p-4 flex items-center gap-3">
+          <div class="flex items-center justify-center w-9 h-9 rounded-lg icon-box-alerta">
+            <AppIcon name="i-lucide-wallet" />
           </div>
           <div>
-            <p class="text-xs text-gray-500">
+            <p
+              class="text-xs"
+              style="color: var(--text-secondary);"
+            >
               Total Pendente
             </p>
-            <p class="font-bold text-red-600">
+            <p class="font-bold text-valor-negativo">
               {{ useFormatters().moeda(dados.kpis.totalPendente) }}
             </p>
           </div>

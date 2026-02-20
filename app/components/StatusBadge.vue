@@ -7,11 +7,11 @@ const { statusLabel, statusColor } = useFormatters()
 </script>
 
 <template>
-  <UBadge
-    :color="statusColor(props.status) as any"
+  <AppBadge
+    :color="statusColor(props.status)"
     variant="subtle"
     size="sm"
   >
     {{ statusLabel(props.status) }}
-  </UBadge>
+  </AppBadge>
 </template>

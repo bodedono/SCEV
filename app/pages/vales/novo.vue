@@ -22,14 +22,14 @@ onMounted(() => {
 <template>
   <div>
     <div class="mb-4">
-      <UButton
+      <AppButton
         icon="i-lucide-arrow-left"
         variant="ghost"
         color="neutral"
         to="/vales"
       >
         Voltar
-      </UButton>
+      </AppButton>
     </div>
 
     <PageHeader
@@ -43,7 +43,7 @@ onMounted(() => {
       color="yellow"
     />
 
-    <div class="max-w-2xl rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
+    <div class="max-w-2xl card p-6">
       <ValeForm
         :funcionarios="funcionarios"
         @salvar="handleSalvar"

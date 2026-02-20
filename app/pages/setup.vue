@@ -53,25 +53,25 @@ const entrar = async () => {
     <!-- Branding mobile -->
     <div class="lg:hidden text-center mb-8">
       <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
-        <UIcon
+        <AppIcon
           name="i-lucide-shield-check"
           class="text-primary text-3xl"
         />
       </div>
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <h1 class="text-2xl font-bold text-stone-800 dark:text-stone-50">
         Setup Inicial
       </h1>
-      <p class="text-sm text-gray-500 mt-1">
+      <p class="text-sm text-stone-500 mt-1">
         SCEV - Criar primeiro administrador
       </p>
     </div>
 
     <!-- Título desktop -->
     <div class="hidden lg:block mb-8">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <h1 class="text-2xl font-bold text-stone-800 dark:text-stone-50">
         Setup Inicial
       </h1>
-      <p class="text-gray-500 mt-1">
+      <p class="text-stone-500 mt-1">
         Criar o primeiro administrador do sistema
       </p>
     </div>
@@ -88,47 +88,47 @@ const entrar = async () => {
         icon="i-lucide-info"
       />
 
-      <UFormField
+      <AppFormField
         label="Nome"
         required
       >
-        <UInput
+        <AppInput
           v-model="form.nome"
           placeholder="Seu nome completo"
           icon="i-lucide-user"
           size="lg"
           autofocus
         />
-      </UFormField>
+      </AppFormField>
 
-      <UFormField
+      <AppFormField
         label="Email"
         required
       >
-        <UInput
+        <AppInput
           v-model="form.email"
           type="email"
           placeholder="admin@email.com"
           icon="i-lucide-mail"
           size="lg"
         />
-      </UFormField>
+      </AppFormField>
 
-      <UFormField
+      <AppFormField
         label="Senha"
         required
         hint="Mínimo 6 caracteres"
       >
-        <UInput
+        <AppInput
           v-model="form.senha"
           type="password"
           placeholder="Senha segura"
           icon="i-lucide-lock"
           size="lg"
         />
-      </UFormField>
+      </AppFormField>
 
-      <UButton
+      <AppButton
         type="submit"
         block
         size="lg"
@@ -138,9 +138,9 @@ const entrar = async () => {
         trailing
       >
         Criar Administrador
-      </UButton>
+      </AppButton>
 
-      <p class="text-center text-xs text-gray-400 mt-2">
+      <p class="text-center text-xs text-stone-400 mt-2">
         Já tem admin?
         <NuxtLink
           to="/login"
@@ -154,17 +154,17 @@ const entrar = async () => {
       v-if="etapa === 'sucesso'"
       class="text-center space-y-4"
     >
-      <UIcon
+      <AppIcon
         name="i-lucide-check-circle"
         class="text-green-500 text-5xl"
       />
       <p class="text-lg font-semibold text-green-700 dark:text-green-400">
         {{ mensagem }}
       </p>
-      <p class="text-sm text-gray-500">
+      <p class="text-sm text-stone-500">
         Clique abaixo para entrar no sistema.
       </p>
-      <UButton
+      <AppButton
         block
         size="lg"
         :loading="carregando"
@@ -173,7 +173,7 @@ const entrar = async () => {
         @click="entrar"
       >
         Entrar no SCEV
-      </UButton>
+      </AppButton>
     </div>
 
     <!-- Erro -->
@@ -186,14 +186,14 @@ const entrar = async () => {
         color="red"
         icon="i-lucide-alert-circle"
       />
-      <UButton
+      <AppButton
         block
         size="lg"
         variant="soft"
         @click="etapa = 'form'"
       >
         Tentar Novamente
-      </UButton>
+      </AppButton>
     </div>
   </div>
 </template>

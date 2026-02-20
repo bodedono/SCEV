@@ -1,5 +1,5 @@
 export const useToastFeedback = () => {
-  const toast = useToast()
+  const toast = useAppToast()
 
   const sucesso = (title: string, description?: string) => {
     toast.add({ title, description, color: 'success' })

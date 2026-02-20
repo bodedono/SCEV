@@ -56,7 +56,9 @@ export const useEmprestimos = () => {
     data_inicio_desconto: string
     motivo: string
   }) => {
-    const valorParcela = Math.round((dados.valor_total / dados.num_parcelas) * 100) / 100
+    const TAXA_MENSAL = 0.015
+    const fator = Math.pow(1 + TAXA_MENSAL, dados.num_parcelas)
+    const valorParcela = Math.round((dados.valor_total * (TAXA_MENSAL * fator) / (fator - 1)) * 100) / 100
     const status = isAdmin.value ? 'ATIVO' : 'PENDENTE_APROVACAO'
 
     const { data, error } = await supabase
@@ -117,6 +119,54 @@ export const useEmprestimos = () => {
     if (error) throw error
   }
 
+  const atualizar = async (id: number, dados: {
+    valor_total?: number
+    num_parcelas?: number
+    data_inicio_desconto?: string
+    motivo?: string
+  }) => {
+    // Se valor ou parcelas mudaram, recalcular valor_parcela
+    const updateData: Record<string, unknown> = { ...dados }
+    if (dados.valor_total !== undefined || dados.num_parcelas !== undefined) {
+      const emp = emprestimos.value.find(e => e.id === id)
+      const pv = dados.valor_total ?? emp?.valor_total ?? 0
+      const n = dados.num_parcelas ?? emp?.num_parcelas ?? 1
+      const TAXA_MENSAL = 0.015
+      const fator = Math.pow(1 + TAXA_MENSAL, n)
+      updateData.valor_parcela = Math.round((pv * (TAXA_MENSAL * fator) / (fator - 1)) * 100) / 100
+    }
+
+    const { data, error } = await supabase
+      .from('emprestimos')
+      .update(updateData)
+      .eq('id', id)
+      .select(`
+        *,
+        funcionario:funcionarios(id, nome, matricula, unidade_id, unidade:unidades(id, nome)),
+        usuario_cadastro:usuarios!emprestimos_usuario_cadastro_id_fkey(id, nome),
+        usuario_aprovacao:usuarios!emprestimos_usuario_aprovacao_id_fkey(id, nome)
+      `)
+      .single()
+
+    if (error) throw error
+    return data as Emprestimo
+  }
+
+  const excluir = async (id: number) => {
+    // Deletar parcelas primeiro (FK constraint)
+    const { error: parcelasError } = await supabase
+      .from('parcelas')
+      .delete()
+      .eq('emprestimo_id', id)
+    if (parcelasError) throw parcelasError
+
+    const { error } = await supabase
+      .from('emprestimos')
+      .delete()
+      .eq('id', id)
+    if (error) throw error
+  }
+
   return {
     emprestimos,
     carregando,
@@ -125,6 +175,8 @@ export const useEmprestimos = () => {
     criar,
     aprovar,
     rejeitar,
-    cancelar
+    cancelar,
+    atualizar,
+    excluir
   }
 }

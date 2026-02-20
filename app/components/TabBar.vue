@@ -17,8 +17,11 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="flex gap-1 p-1 rounded-lg bg-gray-100 dark:bg-gray-800/50 w-fit mb-6">
-    <UButton
+  <div
+    class="flex gap-1 p-1 rounded-lg w-fit mb-6"
+    style="background-color: var(--bg-surface-hover);"
+  >
+    <AppButton
       v-for="t in tabs"
       :key="t.value"
       :icon="t.icon"
@@ -28,14 +31,14 @@ defineEmits<{
       @click="$emit('update:modelValue', t.value)"
     >
       {{ t.label }}
-      <UBadge
+      <AppBadge
         v-if="t.badge"
         size="xs"
         variant="subtle"
         class="ml-1"
       >
         {{ t.badge }}
-      </UBadge>
-    </UButton>
+      </AppBadge>
+    </AppButton>
   </div>
 </template>

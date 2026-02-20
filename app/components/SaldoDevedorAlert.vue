@@ -13,7 +13,7 @@ const { moeda } = useFormatters()
     class="rounded-lg border-2 border-red-300 bg-red-50 dark:bg-red-950/20 dark:border-red-800 p-4"
   >
     <div class="flex items-center gap-3">
-      <UIcon
+      <AppIcon
         name="i-lucide-alert-triangle"
         class="text-red-600 text-xl shrink-0"
       />

@@ -14,14 +14,14 @@ const { moeda, data } = useFormatters()
 </script>
 
 <template>
-  <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4">
+  <div class="card p-4">
     <div class="flex items-start gap-4">
       <!-- Ícone -->
       <div
         class="flex items-center justify-center w-10 h-10 rounded-lg shrink-0"
-        :class="item.tipo === 'EMPRESTIMO' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400' : 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-400'"
+        :class="item.tipo === 'EMPRESTIMO' ? 'icon-box-emprestimo' : 'icon-box-vale'"
       >
-        <UIcon
+        <AppIcon
           :name="item.tipo === 'EMPRESTIMO' ? 'i-lucide-banknote' : 'i-lucide-receipt'"
           class="text-lg"
         />
@@ -30,38 +30,44 @@ const { moeda, data } = useFormatters()
       <!-- Info -->
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2">
-          <UBadge
+          <AppBadge
             :color="item.tipo === 'EMPRESTIMO' ? 'info' : 'warning'"
             variant="subtle"
             size="xs"
           >
             {{ item.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}
-          </UBadge>
+          </AppBadge>
         </div>
-        <p class="mt-1 font-medium text-gray-900 dark:text-white">
+        <p class="mt-1 font-medium text-stone-800 dark:text-stone-50">
           {{ item.funcionario.nome }}
         </p>
-        <p class="text-sm text-gray-500">
+        <p
+          class="text-sm"
+          style="color: var(--text-secondary);"
+        >
           {{ item.funcionario.unidade?.nome }} &middot; {{ data(item.data) }}
         </p>
         <p class="mt-1 text-lg font-bold text-primary">
           {{ moeda(item.valor) }}
         </p>
-        <p class="text-xs text-gray-400 mt-1">
+        <p
+          class="text-xs mt-1"
+          style="color: var(--text-muted);"
+        >
           Solicitado por: {{ item.solicitante.nome }}
         </p>
       </div>
 
       <!-- Ações -->
       <div class="flex gap-2 shrink-0">
-        <UButton
+        <AppButton
           icon="i-lucide-x"
           color="error"
           variant="soft"
           size="sm"
           @click="emit('rejeitar', item.id, item.tipo)"
         />
-        <UButton
+        <AppButton
           icon="i-lucide-check"
           color="success"
           variant="soft"

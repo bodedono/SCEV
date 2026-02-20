@@ -76,31 +76,34 @@ watch(model, (open) => {
       class="space-y-4"
     >
       <!-- Info da parcela -->
-      <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 space-y-2">
+      <div
+        class="p-4 rounded-lg space-y-2"
+        style="background-color: var(--bg-surface-hover);"
+      >
         <div class="flex justify-between text-sm">
-          <span class="text-gray-500">Funcionário</span>
+          <span class="text-body">Funcionário</span>
           <span class="font-medium">{{ parcela.funcionario?.nome ?? '-' }}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-gray-500">Parcela</span>
+          <span class="text-body">Parcela</span>
           <span class="font-medium">{{ parcela.numero }}/{{ parcela.total_parcelas }}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-gray-500">Tipo</span>
+          <span class="text-body">Tipo</span>
           <span class="font-medium">{{ parcela.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-gray-500">Valor</span>
+          <span class="text-body">Valor</span>
           <span class="font-bold text-primary">{{ moeda(parcela.valor) }}</span>
         </div>
         <div class="flex justify-between text-sm">
-          <span class="text-gray-500">Vencimento</span>
+          <span class="text-body">Vencimento</span>
           <span class="font-medium">{{ data(parcela.data_prevista) }}</span>
         </div>
       </div>
 
       <!-- Upload comprovante -->
-      <UFormField
+      <AppFormField
         label="Comprovante"
         required
         hint="PDF, JPG ou PNG (máx. 5MB)"
@@ -108,17 +111,17 @@ watch(model, (open) => {
         <input
           type="file"
           accept=".pdf,.jpg,.jpeg,.png"
-          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer"
+          class="block w-full text-sm text-body file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer"
           @change="handleFileChange"
         >
-      </UFormField>
+      </AppFormField>
 
       <!-- Analisando -->
       <div
         v-if="analisando"
-        class="flex items-center gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400"
+        class="flex items-center gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400"
       >
-        <UIcon
+        <AppIcon
           name="i-lucide-brain"
           class="animate-pulse text-lg"
         />
@@ -136,7 +139,7 @@ watch(model, (open) => {
           class="p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800"
         >
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <UIcon
+            <AppIcon
               name="i-lucide-check-circle"
               class="text-lg"
             />
@@ -158,7 +161,7 @@ watch(model, (open) => {
           class="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800"
         >
           <div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 mb-2">
-            <UIcon
+            <AppIcon
               name="i-lucide-alert-triangle"
               class="text-lg"
             />
@@ -189,38 +192,38 @@ watch(model, (open) => {
         v-if="comprovante && !analisando && !analiseIA"
         class="text-sm text-green-600 flex items-center gap-2"
       >
-        <UIcon name="i-lucide-check-circle" />
+        <AppIcon name="i-lucide-check-circle" />
         {{ comprovante.name }}
       </div>
 
       <!-- Observações -->
-      <UFormField
+      <AppFormField
         label="Observações"
         hint="Opcional"
       >
-        <UTextarea
+        <AppTextarea
           v-model="observacoes"
           placeholder="Observações adicionais..."
           :rows="2"
         />
-      </UFormField>
+      </AppFormField>
     </div>
     <template #footer>
       <div class="flex justify-end gap-2">
-        <UButton
+        <AppButton
           variant="ghost"
           color="neutral"
           @click="model = false"
         >
           Cancelar
-        </UButton>
-        <UButton
+        </AppButton>
+        <AppButton
           :disabled="!comprovante || analisando"
           :loading="enviando"
           @click="confirmar"
         >
           Confirmar Baixa
-        </UButton>
+        </AppButton>
       </div>
     </template>
   </AppModal>

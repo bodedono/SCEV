@@ -42,13 +42,16 @@ watch(aberto, (open) => {
   >
     <div
       v-if="aberto"
-      class="fixed bottom-24 right-6 z-50 w-[380px] max-sm:left-4 max-sm:right-4 max-sm:w-auto flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-2xl"
-      style="height: 500px; max-height: calc(100vh - 140px);"
+      class="fixed bottom-24 right-6 z-50 w-[380px] max-sm:left-4 max-sm:right-4 max-sm:w-auto flex flex-col rounded-2xl border shadow-2xl"
+      style="background-color: var(--bg-surface); border-color: var(--border-subtle); height: 500px; max-height: calc(100vh - 140px);"
     >
       <!-- Header -->
-      <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-800 shrink-0">
+      <div
+        class="flex items-center gap-3 px-4 py-3 border-b shrink-0"
+        style="border-color: var(--border-subtle);"
+      >
         <div class="flex items-center justify-center w-9 h-9 rounded-xl bg-primary/10">
-          <UIcon
+          <AppIcon
             name="i-lucide-bot"
             class="text-primary text-lg"
           />
@@ -57,11 +60,14 @@ watch(aberto, (open) => {
           <p class="text-sm font-semibold truncate">
             Assistente SCEV
           </p>
-          <p class="text-xs text-gray-500">
+          <p
+            class="text-xs"
+            style="color: var(--text-muted);"
+          >
             Especialista do sistema
           </p>
         </div>
-        <UButton
+        <AppButton
           icon="i-lucide-trash-2"
           variant="ghost"
           color="neutral"
@@ -69,7 +75,7 @@ watch(aberto, (open) => {
           title="Limpar conversa"
           @click="limparConversa"
         />
-        <UButton
+        <AppButton
           icon="i-lucide-x"
           variant="ghost"
           color="neutral"
@@ -95,7 +101,7 @@ watch(aberto, (open) => {
             class="flex items-end shrink-0"
           >
             <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-              <UIcon
+              <AppIcon
                 name="i-lucide-bot"
                 class="text-primary text-sm"
               />
@@ -106,8 +112,8 @@ watch(aberto, (open) => {
           <div
             class="max-w-[80%] px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap"
             :class="msg.role === 'user'
-              ? 'bg-primary text-white rounded-2xl rounded-br-md'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-2xl rounded-bl-md'"
+              ? 'chat-bubble-user'
+              : 'chat-bubble-bot'"
           >
             {{ msg.content }}
           </div>
@@ -117,7 +123,7 @@ watch(aberto, (open) => {
             v-if="msg.role === 'user'"
             class="flex items-end shrink-0"
           >
-            <UAvatar
+            <AppAvatar
               :label="usuario?.nome?.charAt(0) ?? 'U'"
               size="xs"
             />
@@ -130,33 +136,36 @@ watch(aberto, (open) => {
           class="flex gap-2 justify-start"
         >
           <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-            <UIcon
+            <AppIcon
               name="i-lucide-bot"
               class="text-primary text-sm"
             />
           </div>
-          <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1">
-            <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0ms]" />
-            <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:150ms]" />
-            <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:300ms]" />
+          <div class="chat-bubble-bot px-4 py-3 flex items-center gap-1">
+            <span class="w-2 h-2 chat-typing-dot rounded-full animate-bounce [animation-delay:0ms]" />
+            <span class="w-2 h-2 chat-typing-dot rounded-full animate-bounce [animation-delay:150ms]" />
+            <span class="w-2 h-2 chat-typing-dot rounded-full animate-bounce [animation-delay:300ms]" />
           </div>
         </div>
       </div>
 
       <!-- Input -->
-      <div class="p-3 border-t border-gray-200 dark:border-gray-800 shrink-0">
+      <div
+        class="p-3 border-t shrink-0"
+        style="border-color: var(--border-subtle);"
+      >
         <form
           class="flex items-center gap-2"
           @submit.prevent="handleEnviar"
         >
-          <UInput
+          <AppInput
             v-model="input"
             placeholder="Digite sua pergunta..."
             class="flex-1"
             :disabled="enviando"
             autofocus
           />
-          <UButton
+          <AppButton
             type="submit"
             icon="i-lucide-send"
             :disabled="!input.trim() || enviando"
@@ -170,7 +179,8 @@ watch(aberto, (open) => {
 
   <!-- FAB -->
   <button
-    class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center"
+    class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center"
+    style="background-color: var(--clr-primary); color: var(--clr-primary-fg);"
     @click="toggle"
   >
     <Transition
@@ -182,13 +192,13 @@ watch(aberto, (open) => {
       leave-to-class="-rotate-90 opacity-0"
       mode="out-in"
     >
-      <UIcon
+      <AppIcon
         v-if="!aberto"
         key="open"
         name="i-lucide-message-circle"
         class="text-2xl"
       />
-      <UIcon
+      <AppIcon
         v-else
         key="close"
         name="i-lucide-x"

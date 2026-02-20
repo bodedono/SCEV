@@ -56,102 +56,102 @@ const salvar = () => {
     class="space-y-4"
     @submit.prevent="salvar"
   >
-    <UFormField
+    <AppFormField
       label="Funcionário"
       required
     >
-      <USelect
+      <AppSelect
         v-model="form.funcionario_id"
         :items="funcionarioOptions"
         placeholder="Selecione o funcionário"
         searchable
       />
-    </UFormField>
+    </AppFormField>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField
+      <AppFormField
         label="Valor (R$)"
         required
       >
-        <UInput
+        <AppInput
           v-model.number="form.valor"
           type="number"
           min="0.01"
           step="0.01"
           placeholder="0,00"
         />
-      </UFormField>
+      </AppFormField>
 
-      <UFormField
+      <AppFormField
         label="Data do Ocorrido"
         required
       >
-        <UInput
+        <AppInput
           v-model="form.data_ocorrido"
           type="date"
         />
-      </UFormField>
+      </AppFormField>
     </div>
 
-    <UFormField
+    <AppFormField
       label="Comentário / Motivo"
       required
       hint="Obrigatório - descreva o que aconteceu"
     >
-      <UTextarea
+      <AppTextarea
         v-model="form.comentario"
         placeholder="Ex: Mesa 15 - cliente saiu sem pagar conta de R$ 87,50"
         :rows="3"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <AppFormField
       label="Referência"
       hint="Opcional - nº comanda, mesa, etc."
     >
-      <UInput
+      <AppInput
         v-model="form.referencia"
         placeholder="Ex: Comanda 1234, Mesa 15"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <AppFormField
       label="Forma de Desconto"
       required
     >
-      <USelect
+      <AppSelect
         v-model="form.forma_desconto"
         :items="formaDescontoOptions"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <AppFormField
       v-if="form.forma_desconto === 'PARCELAS'"
       label="Número de Parcelas"
       required
     >
-      <UInput
+      <AppInput
         v-model.number="form.num_parcelas"
         type="number"
         min="1"
         step="1"
       />
-    </UFormField>
+    </AppFormField>
 
     <div class="flex justify-end gap-3 pt-4">
-      <UButton
+      <AppButton
         variant="outline"
         color="neutral"
         @click="emit('cancelar')"
       >
         Cancelar
-      </UButton>
-      <UButton
+      </AppButton>
+      <AppButton
         type="submit"
         icon="i-lucide-check"
       >
         Cadastrar Vale
-      </UButton>
+      </AppButton>
     </div>
   </form>
 </template>

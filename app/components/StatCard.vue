@@ -5,32 +5,56 @@ defineProps<{
   icone: string
   cor?: string
   destaque?: boolean
+  subtitulo?: string
 }>()
 </script>
 
 <template>
   <div
-    class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5"
-    :class="destaque ? 'ring-2 ring-red-500/50' : ''"
+    class="stat-card"
+    :class="{ 'stat-card-destaque': destaque }"
   >
-    <div class="flex items-center gap-4">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2.5">
+        <div
+          class="flex items-center justify-center w-9 h-9 rounded-lg"
+          :class="cor ?? 'icon-box-info'"
+        >
+          <AppIcon
+            :name="icone"
+            class="text-lg"
+          />
+        </div>
+        <span
+          class="text-sm font-medium"
+          style="color: var(--text-secondary);"
+        >
+          {{ titulo }}
+        </span>
+      </div>
       <div
-        class="flex items-center justify-center w-12 h-12 rounded-lg"
-        :class="cor ?? 'bg-primary/10 text-primary'"
+        class="w-7 h-7 rounded-lg flex items-center justify-center"
+        style="background-color: var(--bg-surface-hover);"
       >
-        <UIcon
-          :name="icone"
-          class="text-2xl"
+        <AppIcon
+          name="i-lucide-arrow-up-right"
+          class="text-sm"
+          style="color: var(--text-muted);"
         />
       </div>
-      <div>
-        <p class="text-sm font-medium text-gray-500">
-          {{ titulo }}
-        </p>
-        <p class="text-2xl font-bold text-gray-900 dark:text-white">
-          {{ valor }}
-        </p>
-      </div>
     </div>
+    <p
+      class="text-3xl font-bold tracking-tight"
+      style="color: var(--text-main);"
+    >
+      {{ valor }}
+    </p>
+    <p
+      v-if="subtitulo"
+      class="text-xs mt-2.5"
+      style="color: var(--text-muted);"
+    >
+      {{ subtitulo }}
+    </p>
   </div>
 </template>

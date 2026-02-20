@@ -119,6 +119,45 @@ export const useVales = () => {
     if (error) throw error
   }
 
+  const atualizar = async (id: number, dados: {
+    valor?: number
+    comentario?: string
+    referencia?: string | null
+    data_ocorrido?: string
+    forma_desconto?: FormaDesconto
+    num_parcelas?: number
+  }) => {
+    const { data, error } = await supabase
+      .from('vales')
+      .update(dados)
+      .eq('id', id)
+      .select(`
+        *,
+        funcionario:funcionarios(id, nome, matricula, unidade_id, unidade:unidades(id, nome)),
+        usuario_cadastro:usuarios!vales_usuario_cadastro_id_fkey(id, nome),
+        usuario_aprovacao:usuarios!vales_usuario_aprovacao_id_fkey(id, nome)
+      `)
+      .single()
+
+    if (error) throw error
+    return data as Vale
+  }
+
+  const excluir = async (id: number) => {
+    // Deletar parcelas primeiro (FK constraint)
+    const { error: parcelasError } = await supabase
+      .from('parcelas')
+      .delete()
+      .eq('vale_id', id)
+    if (parcelasError) throw parcelasError
+
+    const { error } = await supabase
+      .from('vales')
+      .delete()
+      .eq('id', id)
+    if (error) throw error
+  }
+
   return {
     vales,
     carregando,
@@ -127,6 +166,8 @@ export const useVales = () => {
     criar,
     aprovar,
     rejeitar,
-    cancelar
+    cancelar,
+    atualizar,
+    excluir
   }
 }

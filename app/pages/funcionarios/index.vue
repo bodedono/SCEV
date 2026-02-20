@@ -43,13 +43,15 @@ const columns = [
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleCriar = async (dados: any) => {
   const { criar } = useFuncionarios()
-  await comFeedback(
+  const result = await comFeedback(
     () => criar(dados),
     'Funcionário cadastrado com sucesso',
     'Erro ao cadastrar funcionário'
   )
-  modalCadastro.value = false
-  await recarregar()
+  if (result) {
+    modalCadastro.value = false
+    await recarregar()
+  }
 }
 
 // Modal ficha completa
@@ -65,6 +67,7 @@ const salvando = ref(false)
 const formEdit = reactive({
   nome: '',
   cpf: '',
+  telefone: '',
   matricula: '',
   cargo: '',
   unidade_id: undefined as number | undefined,
@@ -117,6 +120,7 @@ const entrarEdicao = () => {
   if (!func) return
   formEdit.nome = func.nome
   formEdit.cpf = func.cpf ? formatarCPF(func.cpf) : ''
+  formEdit.telefone = func.telefone ?? ''
   formEdit.matricula = func.matricula
   formEdit.cargo = func.cargo
   formEdit.unidade_id = func.unidade_id
@@ -163,6 +167,7 @@ const handleSalvar = async () => {
       () => atualizar(modalDetalhe.item.value!.id, {
         nome: formEdit.nome,
         cpf: limparCPF(formEdit.cpf) || null,
+        telefone: formEdit.telefone?.trim() || null,
         matricula: formEdit.matricula,
         cargo: formEdit.cargo,
         unidade_id: formEdit.unidade_id,
@@ -184,26 +189,35 @@ const handleSalvar = async () => {
 
 // Desativar
 const handleDesativar = async () => {
-  if (!modalDetalhe.item.value) return
-  await comFeedback(
-    () => desativar(modalDetalhe.item.value!.id),
-    'Funcionário desativado',
-    'Erro ao desativar funcionário'
-  )
-  modalDetalhe.fechar()
-  await recarregar()
+  const id = modalDetalhe.item.value?.id
+  if (!id) return
+  try {
+    await desativar(id)
+    useAppToast().add({ title: 'Funcionário desativado', color: 'success' })
+    modalDetalhe.fechar()
+    await recarregar()
+  } catch (err: unknown) {
+    const e = err as Record<string, unknown> | undefined
+    const msg = (e?.message as string) || 'Erro desconhecido'
+    useAppToast().add({ title: 'Erro ao desativar funcionário', description: msg, color: 'error' })
+  }
 }
 
 // Excluir permanentemente
 const handleExcluir = async () => {
-  if (!modalDetalhe.item.value) return
-  await comFeedback(
-    () => excluir(modalDetalhe.item.value!.id),
-    'Funcionário excluído permanentemente',
-    'Erro ao excluir funcionário'
-  )
-  modalDetalhe.fechar()
-  await recarregar()
+  const id = modalDetalhe.item.value?.id
+  if (!id) return
+  try {
+    await excluir(id)
+    useAppToast().add({ title: 'Funcionário excluído permanentemente', color: 'success' })
+    funcionarios.value = funcionarios.value.filter(f => f.id !== id)
+    modalDetalhe.fechar()
+    await recarregar()
+  } catch (err: unknown) {
+    const e = err as Record<string, unknown> | undefined
+    const msg = (e?.message as string) || 'Erro desconhecido'
+    useAppToast().add({ title: 'Erro ao excluir funcionário', description: msg, color: 'error' })
+  }
 }
 
 // Helpers
@@ -235,13 +249,13 @@ onMounted(async () => {
       descricao="Gerenciamento de funcionários"
     >
       <template #acoes>
-        <UButton
+        <AppButton
           v-if="isAdmin"
           icon="i-lucide-plus"
           @click="modalCadastro = true"
         >
           Novo Funcionário
-        </UButton>
+        </AppButton>
       </template>
     </PageHeader>
 
@@ -250,7 +264,7 @@ onMounted(async () => {
       search-placeholder="Buscar por nome, matrícula ou CPF..."
     >
       <template #extra>
-        <USelect
+        <AppSelect
           v-if="!isGestor"
           v-model="unidadeFiltro"
           :items="unidadeOptions"
@@ -269,40 +283,40 @@ onMounted(async () => {
       <template #cell-nome="{ row }">
         <div class="flex items-center gap-2">
           <span class="font-medium flex-1 truncate">{{ row.nome }}</span>
-          <UButton
+          <AppButton
             icon="i-lucide-eye"
             variant="ghost"
             color="neutral"
-            size="xs"
+            size="xl"
             @click.stop="abrirDetalhe(row)"
           />
         </div>
       </template>
       <template #cell-cpf="{ row }">
-        <span class="text-gray-500 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
+        <span class="text-stone-500 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
       </template>
       <template #cell-matricula="{ row }">
-        <span class="text-gray-500">{{ row.matricula }}</span>
+        <span class="text-stone-500">{{ row.matricula }}</span>
       </template>
       <template #cell-unidade="{ row }">
-        <span class="text-gray-500">{{ row.unidade?.nome }}</span>
+        <span class="text-stone-500">{{ row.unidade?.nome }}</span>
       </template>
       <template #cell-cargo="{ row }">
-        <span class="text-gray-500">{{ row.cargo }}</span>
+        <span class="text-stone-500">{{ row.cargo }}</span>
       </template>
       <template #cell-status="{ row }">
-        <UBadge
+        <AppBadge
           :color="row.ativo ? 'success' : 'error'"
           variant="subtle"
           size="sm"
         >
           {{ row.ativo ? 'Ativo' : 'Inativo' }}
-        </UBadge>
+        </AppBadge>
       </template>
       <template #cell-saldo_devedor="{ row }">
         <span
           class="font-medium"
-          :class="(row.saldo_devedor ?? 0) > 0 ? 'text-red-600' : 'text-gray-500'"
+          :class="(row.saldo_devedor ?? 0) > 0 ? 'text-red-600' : 'text-stone-500'"
         >
           {{ moeda(row.saldo_devedor ?? 0) }}
         </span>
@@ -334,9 +348,9 @@ onMounted(async () => {
         <!-- Carregando detalhes -->
         <div
           v-if="carregandoDetalhe"
-          class="flex items-center justify-center py-8 text-gray-400"
+          class="flex items-center justify-center py-8 text-stone-400"
         >
-          <UIcon
+          <AppIcon
             name="i-lucide-loader-2"
             class="animate-spin text-2xl mr-2"
           />
@@ -350,7 +364,7 @@ onMounted(async () => {
         >
           <!-- Cabeçalho -->
           <div class="flex items-center gap-4">
-            <UAvatar
+            <AppAvatar
               :label="modalDetalhe.item.value.nome.charAt(0)"
               size="lg"
             />
@@ -358,22 +372,22 @@ onMounted(async () => {
               <h4 class="font-semibold text-lg">
                 {{ modalDetalhe.item.value.nome }}
               </h4>
-              <p class="text-sm text-gray-500">
+              <p class="text-sm text-stone-500">
                 {{ modalDetalhe.item.value.cargo }} · {{ modalDetalhe.item.value.unidade?.nome }}
               </p>
             </div>
-            <UBadge
+            <AppBadge
               :color="modalDetalhe.item.value.ativo ? 'success' : 'error'"
               variant="subtle"
             >
               {{ modalDetalhe.item.value.ativo ? 'Ativo' : 'Inativo' }}
-            </UBadge>
+            </AppBadge>
           </div>
 
           <!-- Dados -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-lg bg-surface-area">
             <div>
-              <p class="text-xs text-gray-400 mb-1">
+              <p class="text-xs text-stone-400 mb-1">
                 CPF
               </p>
               <p class="font-mono text-sm">
@@ -381,7 +395,15 @@ onMounted(async () => {
               </p>
             </div>
             <div>
-              <p class="text-xs text-gray-400 mb-1">
+              <p class="text-xs text-stone-400 mb-1">
+                Telefone
+              </p>
+              <p class="text-sm">
+                {{ modalDetalhe.item.value.telefone || '—' }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs text-stone-400 mb-1">
                 Matrícula
               </p>
               <p class="text-sm font-medium">
@@ -389,7 +411,7 @@ onMounted(async () => {
               </p>
             </div>
             <div>
-              <p class="text-xs text-gray-400 mb-1">
+              <p class="text-xs text-stone-400 mb-1">
                 Admissão
               </p>
               <p class="text-sm">
@@ -397,7 +419,7 @@ onMounted(async () => {
               </p>
             </div>
             <div>
-              <p class="text-xs text-gray-400 mb-1">
+              <p class="text-xs text-stone-400 mb-1">
                 Saldo Devedor
               </p>
               <p
@@ -412,15 +434,15 @@ onMounted(async () => {
           <!-- Empréstimos -->
           <div>
             <h5 class="text-sm font-semibold mb-2 flex items-center gap-1.5">
-              <UIcon
+              <AppIcon
                 name="i-lucide-banknote"
-                class="text-blue-500"
+                class="text-amber-600"
               />
               Empréstimos
             </h5>
             <div
               v-if="emprestimos.length === 0"
-              class="text-xs text-gray-400 text-center py-3"
+              class="text-xs text-stone-400 text-center py-3"
             >
               Nenhum empréstimo registrado
             </div>
@@ -431,11 +453,11 @@ onMounted(async () => {
               <div
                 v-for="emp in emprestimos"
                 :key="emp.id"
-                class="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm"
+                class="flex items-center justify-between p-2.5 rounded-lg bg-surface-area text-sm"
               >
                 <div>
                   <span class="font-medium">{{ moeda(emp.valor_total) }}</span>
-                  <span class="text-gray-400 ml-2">{{ emp.num_parcelas }}x {{ moeda(emp.valor_parcela) }}</span>
+                  <span class="text-stone-400 ml-2">{{ emp.num_parcelas }}x {{ moeda(emp.valor_parcela) }}</span>
                 </div>
                 <StatusBadge :status="emp.status" />
               </div>
@@ -445,15 +467,15 @@ onMounted(async () => {
           <!-- Vales -->
           <div>
             <h5 class="text-sm font-semibold mb-2 flex items-center gap-1.5">
-              <UIcon
+              <AppIcon
                 name="i-lucide-receipt"
-                class="text-orange-500"
+                class="text-amber-600"
               />
               Vales
             </h5>
             <div
               v-if="vales.length === 0"
-              class="text-xs text-gray-400 text-center py-3"
+              class="text-xs text-stone-400 text-center py-3"
             >
               Nenhum vale registrado
             </div>
@@ -464,11 +486,11 @@ onMounted(async () => {
               <div
                 v-for="vale in vales"
                 :key="vale.id"
-                class="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm"
+                class="flex items-center justify-between p-2.5 rounded-lg bg-surface-area text-sm"
               >
                 <div>
                   <span class="font-medium">{{ moeda(vale.valor) }}</span>
-                  <span class="text-gray-400 ml-2 truncate max-w-[200px] inline-block align-bottom">{{ vale.comentario }}</span>
+                  <span class="text-stone-400 ml-2 truncate max-w-[200px] inline-block align-bottom">{{ vale.comentario }}</span>
                 </div>
                 <StatusBadge :status="vale.status" />
               </div>
@@ -481,22 +503,22 @@ onMounted(async () => {
           v-else-if="modo === 'editar'"
           class="space-y-4"
         >
-          <UFormField
+          <AppFormField
             label="Nome Completo"
             required
           >
-            <UInput
+            <AppInput
               v-model="formEdit.nome"
               placeholder="Nome do funcionário"
               class="w-full"
             />
-          </UFormField>
+          </AppFormField>
 
-          <UFormField
+          <AppFormField
             label="CPF"
             :error="cpfErro"
           >
-            <UInput
+            <AppInput
               :model-value="formEdit.cpf"
               placeholder="000.000.000-00"
               icon="i-lucide-fingerprint"
@@ -505,60 +527,70 @@ onMounted(async () => {
               @input="onCpfInput"
               @blur="validarCpfField"
             />
-          </UFormField>
+          </AppFormField>
+
+          <AppFormField label="Telefone">
+            <AppInput
+              v-model="formEdit.telefone"
+              type="tel"
+              placeholder="(00) 00000-0000"
+              icon="i-lucide-phone"
+              class="w-full"
+            />
+          </AppFormField>
 
           <div class="grid grid-cols-2 gap-4">
-            <UFormField
+            <AppFormField
               label="Matrícula"
               required
             >
-              <UInput
+              <AppInput
                 v-model="formEdit.matricula"
                 placeholder="Ex: 12345"
               />
-            </UFormField>
+            </AppFormField>
 
-            <UFormField
+            <AppFormField
               label="Cargo/Função"
               required
             >
-              <UInput
+              <AppInput
                 v-model="formEdit.cargo"
                 placeholder="Ex: Garçom"
               />
-            </UFormField>
+            </AppFormField>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
-            <UFormField
+            <AppFormField
               label="Unidade"
               required
             >
-              <USelect
+              <AppSelect
                 v-model="formEdit.unidade_id"
                 :items="unidadeEditOptions"
                 placeholder="Selecione a unidade"
               />
-            </UFormField>
+            </AppFormField>
 
-            <UFormField
+            <AppFormField
               label="Data de Admissão"
               required
             >
-              <UInput
+              <AppInput
                 v-model="formEdit.data_admissao"
                 type="date"
               />
-            </UFormField>
+            </AppFormField>
           </div>
 
-          <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-            <USwitch v-model="formEdit.ativo" />
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-area">
+            <AppSwitch v-model="formEdit.ativo" />
             <div>
               <p class="text-sm font-medium">
                 Funcionário ativo
               </p>
-              <p class="text-xs text-gray-500">
+              <p class="text-xs text-stone-500">
                 Funcionários inativos não aparecem em novos lançamentos
               </p>
             </div>
@@ -572,7 +604,7 @@ onMounted(async () => {
         >
           <div class="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
             <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-2">
-              <UIcon
+              <AppIcon
                 name="i-lucide-alert-triangle"
                 class="text-lg"
               />
@@ -595,7 +627,7 @@ onMounted(async () => {
         >
           <div class="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
             <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-2">
-              <UIcon
+              <AppIcon
                 name="i-lucide-trash-2"
                 class="text-lg"
               />
@@ -617,15 +649,15 @@ onMounted(async () => {
         <div class="flex justify-end gap-2">
           <!-- Modo VER -->
           <template v-if="modo === 'ver' && !carregandoDetalhe">
-            <UButton
+            <AppButton
               v-if="isAdmin"
               icon="i-lucide-pencil"
               variant="soft"
               @click="entrarEdicao"
             >
               Editar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               v-if="isAdmin && modalDetalhe.item.value?.ativo"
               icon="i-lucide-user-x"
               variant="soft"
@@ -633,8 +665,8 @@ onMounted(async () => {
               @click="modo = 'desativar'"
             >
               Desativar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               v-if="isAdmin"
               icon="i-lucide-trash-2"
               variant="soft"
@@ -642,62 +674,62 @@ onMounted(async () => {
               @click="modo = 'excluir'"
             >
               Excluir
-            </UButton>
+            </AppButton>
           </template>
 
           <!-- Modo EDITAR -->
           <template v-else-if="modo === 'editar'">
-            <UButton
+            <AppButton
               variant="outline"
               color="neutral"
               @click="modo = 'ver'"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-check"
               :loading="salvando"
               @click="handleSalvar"
             >
               Salvar
-            </UButton>
+            </AppButton>
           </template>
 
           <!-- Modo DESATIVAR -->
           <template v-else-if="modo === 'desativar'">
-            <UButton
+            <AppButton
               variant="outline"
               color="neutral"
               @click="modo = 'ver'"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-user-x"
               color="error"
               variant="soft"
               @click="handleDesativar"
             >
               Confirmar Desativação
-            </UButton>
+            </AppButton>
           </template>
 
           <!-- Modo EXCLUIR -->
           <template v-else-if="modo === 'excluir'">
-            <UButton
+            <AppButton
               variant="outline"
               color="neutral"
               @click="modo = 'ver'"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-trash-2"
               color="error"
               @click="handleExcluir"
             >
               Excluir Permanentemente
-            </UButton>
+            </AppButton>
           </template>
         </div>
       </template>

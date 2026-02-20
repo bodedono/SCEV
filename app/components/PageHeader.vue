@@ -8,12 +8,12 @@ defineProps<{
 <template>
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <h1 class="text-2xl text-heading">
         {{ titulo }}
       </h1>
       <p
         v-if="descricao"
-        class="mt-1 text-sm text-gray-500"
+        class="mt-1 text-sm text-body"
       >
         {{ descricao }}
       </p>

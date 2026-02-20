@@ -15,6 +15,7 @@ const emit = defineEmits<{
 const form = reactive({
   nome: props.funcionario?.nome ?? '',
   cpf: props.funcionario?.cpf ? formatarCPF(props.funcionario.cpf) : '',
+  telefone: props.funcionario?.telefone ?? '',
   matricula: props.funcionario?.matricula ?? '',
   unidade_id: props.funcionario?.unidade_id ?? undefined as number | undefined,
   cargo: props.funcionario?.cargo ?? '',
@@ -54,7 +55,7 @@ const unidadeOptions = computed(() =>
 
 const salvar = () => {
   if (!validarCpfField()) return
-  emit('salvar', { ...form, cpf: limparCPF(form.cpf) || null })
+  emit('salvar', { ...form, cpf: limparCPF(form.cpf) || null, telefone: form.telefone?.trim() || null })
 }
 </script>
 
@@ -63,22 +64,22 @@ const salvar = () => {
     class="space-y-4"
     @submit.prevent="salvar"
   >
-    <UFormField
+    <AppFormField
       label="Nome Completo"
       required
     >
-      <UInput
+      <AppInput
         v-model="form.nome"
         placeholder="Nome do funcionário"
         class="w-full"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <AppFormField
       label="CPF"
       :error="cpfErro"
     >
-      <UInput
+      <AppInput
         :model-value="form.cpf"
         placeholder="000.000.000-00"
         icon="i-lucide-fingerprint"
@@ -87,67 +88,77 @@ const salvar = () => {
         @input="onCpfInput"
         @blur="validarCpfField"
       />
-    </UFormField>
+    </AppFormField>
+
+    <AppFormField label="Telefone">
+      <AppInput
+        v-model="form.telefone"
+        type="tel"
+        placeholder="(00) 00000-0000"
+        icon="i-lucide-phone"
+        class="w-full"
+      />
+    </AppFormField>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField
+      <AppFormField
         label="Matrícula"
         required
       >
-        <UInput
+        <AppInput
           v-model="form.matricula"
           placeholder="Ex: 12345"
         />
-      </UFormField>
+      </AppFormField>
 
-      <UFormField
+      <AppFormField
         label="Cargo/Função"
         required
       >
-        <UInput
+        <AppInput
           v-model="form.cargo"
           placeholder="Ex: Garçom"
         />
-      </UFormField>
+      </AppFormField>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField
+      <AppFormField
         label="Unidade"
         required
       >
-        <USelect
+        <AppSelect
           v-model="form.unidade_id"
           :items="unidadeOptions"
           placeholder="Selecione a unidade"
         />
-      </UFormField>
+      </AppFormField>
 
-      <UFormField
+      <AppFormField
         label="Data de Admissão"
         required
       >
-        <UInput
+        <AppInput
           v-model="form.data_admissao"
           type="date"
         />
-      </UFormField>
+      </AppFormField>
     </div>
 
     <div class="flex justify-end gap-3 pt-4">
-      <UButton
+      <AppButton
         variant="outline"
         color="neutral"
         @click="emit('cancelar')"
       >
         Cancelar
-      </UButton>
-      <UButton
+      </AppButton>
+      <AppButton
         type="submit"
         icon="i-lucide-check"
       >
         {{ props.funcionario ? 'Atualizar' : 'Cadastrar' }}
-      </UButton>
+      </AppButton>
     </div>
   </form>
 </template>

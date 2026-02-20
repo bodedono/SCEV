@@ -61,22 +61,22 @@ onMounted(() => listarPendentes())
         <span class="font-medium">{{ row.funcionario?.nome }}</span>
       </template>
       <template #cell-tipo="{ row }">
-        <UBadge
+        <AppBadge
           :color="row.tipo === 'EMPRESTIMO' ? 'info' : 'warning'"
           variant="subtle"
           size="xs"
         >
           {{ row.tipo === 'EMPRESTIMO' ? 'Empréstimo' : 'Vale' }}
-        </UBadge>
+        </AppBadge>
       </template>
       <template #cell-parcela="{ row }">
-        <span class="text-gray-500">{{ row.numero }}/{{ row.total_parcelas }}</span>
+        <span class="text-stone-500">{{ row.numero }}/{{ row.total_parcelas }}</span>
       </template>
       <template #cell-valor="{ row }">
         <span class="font-medium">{{ moeda(row.valor) }}</span>
       </template>
       <template #cell-vencimento="{ row }">
-        <span :class="isAtrasada(row) ? 'text-red-600 font-semibold' : 'text-gray-500'">
+        <span :class="isAtrasada(row) ? 'text-red-600 font-semibold' : 'text-stone-500'">
           {{ data(row.data_prevista) }}
           <span
             v-if="isAtrasada(row)"
@@ -88,7 +88,7 @@ onMounted(() => listarPendentes())
         <StatusBadge :status="isAtrasada(row) ? 'ATRASADA' : row.status" />
       </template>
       <template #cell-acao="{ row }">
-        <UButton
+        <AppButton
           size="xs"
           variant="soft"
           color="success"
@@ -96,7 +96,7 @@ onMounted(() => listarPendentes())
           @click="abrirBaixa(row)"
         >
           Baixa
-        </UButton>
+        </AppButton>
       </template>
     </DataTable>
 

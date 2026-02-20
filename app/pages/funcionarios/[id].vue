@@ -52,19 +52,19 @@ const desativarFuncionario = async () => {
 <template>
   <div>
     <div class="mb-4">
-      <UButton
+      <AppButton
         icon="i-lucide-arrow-left"
         variant="ghost"
         color="neutral"
         to="/funcionarios"
       >
         Voltar para lista
-      </UButton>
+      </AppButton>
     </div>
 
     <div
       v-if="carregando"
-      class="text-center py-12 text-gray-500"
+      class="text-center py-12 text-stone-500"
     >
       Carregando funcionário...
     </div>
@@ -86,7 +86,7 @@ const desativarFuncionario = async () => {
           v-if="isAdmin"
           class="flex gap-2"
         >
-          <UButton
+          <AppButton
             v-if="funcionario.ativo"
             variant="soft"
             color="error"
@@ -94,7 +94,7 @@ const desativarFuncionario = async () => {
             @click="desativarFuncionario"
           >
             Desativar
-          </UButton>
+          </AppButton>
         </div>
       </div>
 

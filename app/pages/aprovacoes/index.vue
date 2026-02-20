@@ -96,9 +96,9 @@ onMounted(() => carregarPendencias())
 
     <div
       v-if="carregando"
-      class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500"
+      class="flex flex-col items-center justify-center py-16 text-stone-400 dark:text-stone-500"
     >
-      <UIcon
+      <AppIcon
         name="i-lucide-loader-2"
         class="text-2xl animate-spin mb-3"
       />
@@ -111,11 +111,11 @@ onMounted(() => carregarPendencias())
       v-else-if="pendencias.length === 0"
       class="flex flex-col items-center justify-center py-16"
     >
-      <UIcon
+      <AppIcon
         name="i-lucide-check-circle-2"
         class="text-4xl text-green-500 mb-3"
       />
-      <p class="text-gray-500">
+      <p class="text-stone-500">
         Nenhuma pendência de aprovação
       </p>
     </div>

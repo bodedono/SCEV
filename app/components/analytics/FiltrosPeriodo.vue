@@ -29,7 +29,7 @@ const presets: { label: string, value: PeriodoPreset }[] = [
   <div class="flex flex-wrap items-center gap-3">
     <!-- Presets de período -->
     <div class="flex gap-1">
-      <UButton
+      <AppButton
         v-for="preset in presets"
         :key="preset.value"
         size="sm"
@@ -38,7 +38,7 @@ const presets: { label: string, value: PeriodoPreset }[] = [
         @click="emit('update:periodo', preset.value)"
       >
         {{ preset.label }}
-      </UButton>
+      </AppButton>
     </div>
 
     <div class="flex-1" />
@@ -48,14 +48,14 @@ const presets: { label: string, value: PeriodoPreset }[] = [
       v-if="periodo === 'custom'"
       class="flex items-center gap-2"
     >
-      <UInput
+      <AppInput
         type="date"
         size="sm"
         :model-value="dataInicio"
         @update:model-value="emit('update:dataInicio', $event as string)"
       />
-      <span class="text-gray-400 text-sm">até</span>
-      <UInput
+      <span class="text-stone-400 dark:text-stone-500 text-sm">até</span>
+      <AppInput
         type="date"
         size="sm"
         :model-value="dataFim"
@@ -64,7 +64,7 @@ const presets: { label: string, value: PeriodoPreset }[] = [
     </div>
 
     <!-- Filtro de unidade -->
-    <USelect
+    <AppSelect
       size="sm"
       :model-value="unidadeId"
       :items="unidades"

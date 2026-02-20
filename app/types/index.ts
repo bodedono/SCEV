@@ -19,6 +19,8 @@ export interface Usuario {
   nome: string
   email: string
   cpf: string | null
+  telefone: string | null
+  data_nascimento: string | null
   perfil: PerfilUsuario
   unidade_id: number | null
   unidade?: Unidade
@@ -49,6 +51,7 @@ export interface Funcionario {
   id: number
   nome: string
   cpf: string | null
+  telefone: string | null
   matricula: string
   unidade_id: number
   unidade?: Unidade
@@ -56,6 +59,16 @@ export interface Funcionario {
   data_admissao: string
   ativo: boolean
   saldo_devedor?: number
+  usuario_id: string | null
+}
+
+export interface RegistroFormData {
+  nome: string
+  email: string
+  senha: string
+  cpf: string
+  telefone: string
+  data_nascimento: string
 }
 
 export interface Emprestimo {

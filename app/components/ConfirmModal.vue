@@ -25,7 +25,7 @@ defineEmits<{
       <p>{{ message }}</p>
       <p
         v-if="detail"
-        class="text-sm text-gray-500 dark:text-gray-400"
+        class="text-sm text-body"
       >
         {{ detail }}
       </p>
@@ -33,21 +33,21 @@ defineEmits<{
 
     <template #footer>
       <div class="flex justify-end gap-2">
-        <UButton
+        <AppButton
           variant="outline"
           color="neutral"
           @click="model = false"
         >
           Cancelar
-        </UButton>
-        <UButton
+        </AppButton>
+        <AppButton
           :color="destructive ? 'error' : 'primary'"
           :variant="destructive ? 'soft' : 'solid'"
           :icon="confirmIcon"
           @click="$emit('confirm'); model = false"
         >
           {{ confirmLabel ?? 'Confirmar' }}
-        </UButton>
+        </AppButton>
       </div>
     </template>
   </AppModal>

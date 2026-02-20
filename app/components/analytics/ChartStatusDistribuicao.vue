@@ -16,12 +16,12 @@ const isDark = computed(() => colorMode.value === 'dark')
 const tab = ref<'emprestimos' | 'vales'>('emprestimos')
 
 const STATUS_COLORS: Record<string, string> = {
-  PENDENTE_APROVACAO: '#eab308',
-  ATIVO: '#3b82f6',
-  PENDENTE: '#f97316',
-  QUITADO: '#22c55e',
-  CANCELADO: '#6b7280',
-  REJEITADO: '#ef4444'
+  PENDENTE_APROVACAO: '#D4A574',
+  ATIVO: '#795548',
+  PENDENTE: '#C4956A',
+  QUITADO: '#6D9B76',
+  CANCELADO: '#8D6E63',
+  REJEITADO: '#C0392B'
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -41,7 +41,7 @@ const chartData = computed(() => ({
   labels: activeData.value.map(d => STATUS_LABELS[d.status] ?? d.status),
   datasets: [{
     data: activeData.value.map(d => d.valor),
-    backgroundColor: activeData.value.map(d => STATUS_COLORS[d.status] ?? '#9ca3af'),
+    backgroundColor: activeData.value.map(d => STATUS_COLORS[d.status] ?? '#BCAAA4'),
     borderWidth: 0
   }]
 }))
@@ -52,7 +52,7 @@ const chartOptions = computed(() => ({
   plugins: {
     legend: {
       position: 'bottom' as const,
-      labels: { color: isDark.value ? '#9ca3af' : '#6b7280', padding: 16 }
+      labels: { color: isDark.value ? '#BCAAA4' : '#8D6E63', padding: 16 }
     },
     tooltip: {
       callbacks: {
@@ -70,37 +70,38 @@ const hasData = computed(() => activeData.value.length > 0)
 </script>
 
 <template>
-  <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+  <div class="card p-5">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-sm font-semibold flex items-center gap-2">
-        <UIcon
+        <AppIcon
           name="i-lucide-pie-chart"
-          class="text-purple-500"
+          class="text-amber-700"
         />
         Distribuição por Status
       </h3>
       <div class="flex gap-1">
-        <UButton
+        <AppButton
           size="xs"
           :variant="tab === 'emprestimos' ? 'solid' : 'ghost'"
           :color="tab === 'emprestimos' ? 'primary' : 'neutral'"
           @click="tab = 'emprestimos'"
         >
           Empréstimos
-        </UButton>
-        <UButton
+        </AppButton>
+        <AppButton
           size="xs"
           :variant="tab === 'vales' ? 'solid' : 'ghost'"
           :color="tab === 'vales' ? 'primary' : 'neutral'"
           @click="tab = 'vales'"
         >
           Vales
-        </UButton>
+        </AppButton>
       </div>
     </div>
     <div
       v-if="!hasData"
-      class="flex items-center justify-center h-64 text-gray-400 text-sm"
+      class="flex items-center justify-center h-64 text-sm"
+      style="color: var(--text-muted);"
     >
       Sem dados para o período selecionado
     </div>

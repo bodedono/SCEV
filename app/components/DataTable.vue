@@ -44,9 +44,10 @@ const hideClass = (col: DataTableColumn) => {
 <template>
   <div
     v-if="loading"
-    class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500"
+    class="flex flex-col items-center justify-center py-16"
+    style="color: var(--text-muted);"
   >
-    <UIcon
+    <AppIcon
       name="i-lucide-loader-2"
       class="text-2xl animate-spin mb-3"
     />
@@ -57,29 +58,36 @@ const hideClass = (col: DataTableColumn) => {
 
   <div
     v-else
-    class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden"
+    class="card overflow-hidden"
   >
     <table class="w-full text-sm">
-      <thead class="bg-gray-50/80 dark:bg-gray-800/50">
+      <thead style="background-color: var(--bg-surface-hover);">
         <tr>
           <th
             v-for="col in columns"
             :key="col.key"
-            class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400"
+            class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider"
+            style="color: var(--text-secondary);"
             :class="[col.headerClass, hideClass(col)]"
           >
             {{ col.label }}
           </th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+      <tbody
+        class="divide-y"
+        style="--tw-divide-color: var(--border-subtle);"
+      >
         <tr v-if="data.length === 0">
           <td
             :colspan="columns.length"
             class="px-4 py-16 text-center"
           >
-            <div class="flex flex-col items-center gap-2 text-gray-400 dark:text-gray-500">
-              <UIcon
+            <div
+              class="flex flex-col items-center gap-2"
+              style="color: var(--text-muted);"
+            >
+              <AppIcon
                 :name="emptyIcon ?? 'i-lucide-inbox'"
                 class="text-3xl"
               />
@@ -92,7 +100,7 @@ const hideClass = (col: DataTableColumn) => {
         <tr
           v-for="(row, index) in data"
           :key="row.id ?? index"
-          class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+          class="transition-colors table-row-hover"
           :class="[rowClickable ? 'cursor-pointer' : '', getRowClass(row, rowClass)]"
           @click="$emit('row-click', row)"
         >

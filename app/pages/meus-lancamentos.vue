@@ -55,7 +55,7 @@ const colunasVales = [
         {{ moeda(row.valor_total) }}
       </template>
       <template #cell-data="{ row }">
-        <span class="text-gray-500">{{ data(row.created_at) }}</span>
+        <span class="text-stone-500">{{ data(row.created_at) }}</span>
       </template>
       <template #cell-status="{ row }">
         <StatusBadge :status="row.status" />
@@ -73,13 +73,13 @@ const colunasVales = [
         <span class="font-medium">{{ row.funcionario?.nome }}</span>
       </template>
       <template #cell-comentario="{ row }">
-        <span class="text-gray-500 truncate max-w-xs block">{{ row.comentario }}</span>
+        <span class="text-stone-500 truncate max-w-xs block">{{ row.comentario }}</span>
       </template>
       <template #cell-valor="{ row }">
         {{ moeda(row.valor) }}
       </template>
       <template #cell-data="{ row }">
-        <span class="text-gray-500">{{ data(row.created_at) }}</span>
+        <span class="text-stone-500">{{ data(row.created_at) }}</span>
       </template>
       <template #cell-status="{ row }">
         <StatusBadge :status="row.status" />

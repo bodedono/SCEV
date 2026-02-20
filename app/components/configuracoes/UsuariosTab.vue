@@ -152,25 +152,32 @@ const handleSalvar = async () => {
 // Criar novo
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleCriar = async (dados: any) => {
-  await comFeedback(
+  const result = await comFeedback(
     () => criarUsuario(dados),
     'Usuário criado com sucesso',
     'Erro ao criar usuário'
   )
-  modalCriar.value = false
-  await listarUsuarios()
+  if (result !== null) {
+    modalCriar.value = false
+    await listarUsuarios()
+  }
 }
 
 // Excluir
 const handleExcluir = async () => {
-  if (!modalDetalhe.item.value) return
-  await comFeedback(
-    () => excluirUsuario(modalDetalhe.item.value!.id),
-    'Usuário excluído permanentemente',
-    'Erro ao excluir'
-  )
-  modalDetalhe.fechar()
-  await listarUsuarios()
+  const id = modalDetalhe.item.value?.id
+  if (!id) return
+  try {
+    await excluirUsuario(id)
+    useAppToast().add({ title: 'Usuário excluído permanentemente', color: 'success' })
+    modalDetalhe.fechar()
+    await listarUsuarios()
+  } catch (err: unknown) {
+    const e = err as Record<string, unknown> | undefined
+    const data = e?.data as Record<string, unknown> | undefined
+    const msg = (data?.message as string) || (e?.message as string) || 'Erro desconhecido'
+    useAppToast().add({ title: 'Erro ao excluir', description: msg, color: 'error' })
+  }
 }
 
 // Resetar senha
@@ -219,19 +226,19 @@ onMounted(async () => {
   <div>
     <!-- Toolbar -->
     <div class="flex items-center gap-3 mb-6">
-      <UInput
+      <AppInput
         v-model="busca"
         placeholder="Buscar por nome, email ou CPF..."
         icon="i-lucide-search"
         class="flex-1 max-w-sm"
       />
       <div class="flex-1" />
-      <UButton
+      <AppButton
         icon="i-lucide-plus"
         @click="modalCriar = true"
       >
         Novo Usuário
-      </UButton>
+      </AppButton>
     </div>
 
     <!-- Tabela -->
@@ -247,10 +254,10 @@ onMounted(async () => {
             {{ row.nome }}
             <span
               v-if="row.id === currentUser?.id"
-              class="ml-1 text-xs text-gray-400"
+              class="ml-1 text-xs text-stone-400 dark:text-stone-500"
             >(você)</span>
           </span>
-          <UButton
+          <AppButton
             icon="i-lucide-eye"
             variant="ghost"
             color="neutral"
@@ -260,31 +267,31 @@ onMounted(async () => {
         </div>
       </template>
       <template #cell-email="{ row }">
-        <span class="text-gray-500">{{ row.email }}</span>
+        <span class="text-stone-500 dark:text-stone-400">{{ row.email }}</span>
       </template>
       <template #cell-cpf="{ row }">
-        <span class="text-gray-500 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
+        <span class="text-stone-500 dark:text-stone-400 font-mono text-xs">{{ row.cpf ? formatarCPF(row.cpf) : '—' }}</span>
       </template>
       <template #cell-perfil="{ row }">
-        <UBadge
+        <AppBadge
           :color="perfilColor(row.perfil)"
           variant="subtle"
           size="sm"
         >
           {{ perfilLabel(row.perfil) }}
-        </UBadge>
+        </AppBadge>
       </template>
       <template #cell-unidade="{ row }">
-        <span class="text-gray-500">{{ row.unidade?.nome ?? 'Todas' }}</span>
+        <span class="text-stone-500 dark:text-stone-400">{{ row.unidade?.nome ?? 'Todas' }}</span>
       </template>
       <template #cell-status="{ row }">
-        <UBadge
+        <AppBadge
           :color="row.ativo ? 'success' : 'error'"
           variant="subtle"
           size="sm"
         >
           {{ row.ativo ? 'Ativo' : 'Inativo' }}
-        </UBadge>
+        </AppBadge>
       </template>
     </DataTable>
 
@@ -317,7 +324,7 @@ onMounted(async () => {
         >
           <div class="flex items-center gap-3 mb-2">
             <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary">
-              <UIcon
+              <AppIcon
                 name="i-lucide-user"
                 class="text-xl"
               />
@@ -326,29 +333,29 @@ onMounted(async () => {
               <h4 class="font-semibold text-lg">
                 {{ modalDetalhe.item.value.nome }}
               </h4>
-              <p class="text-sm text-gray-500">
+              <p class="text-sm text-stone-500 dark:text-stone-400">
                 {{ modalDetalhe.item.value.email }}
               </p>
             </div>
             <div class="flex gap-2">
-              <UBadge
+              <AppBadge
                 :color="perfilColor(modalDetalhe.item.value.perfil)"
                 variant="subtle"
               >
                 {{ perfilLabel(modalDetalhe.item.value.perfil) }}
-              </UBadge>
-              <UBadge
+              </AppBadge>
+              <AppBadge
                 :color="modalDetalhe.item.value.ativo ? 'success' : 'error'"
                 variant="subtle"
               >
                 {{ modalDetalhe.item.value.ativo ? 'Ativo' : 'Inativo' }}
-              </UBadge>
+              </AppBadge>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+          <div class="grid grid-cols-2 gap-3 p-4 rounded-lg bg-surface-area">
             <div>
-              <p class="text-xs text-gray-400 mb-1">
+              <p class="text-xs text-stone-400 dark:text-stone-500 mb-1">
                 CPF
               </p>
               <p class="font-mono text-sm">
@@ -356,7 +363,7 @@ onMounted(async () => {
               </p>
             </div>
             <div>
-              <p class="text-xs text-gray-400 mb-1">
+              <p class="text-xs text-stone-400 dark:text-stone-500 mb-1">
                 Unidade
               </p>
               <p class="text-sm">
@@ -371,34 +378,34 @@ onMounted(async () => {
           v-else-if="modo === 'editar'"
           class="space-y-4"
         >
-          <UFormField
+          <AppFormField
             label="Nome Completo"
             required
           >
-            <UInput
+            <AppInput
               v-model="formEdit.nome"
               placeholder="Nome do usuário"
               class="w-full"
             />
-          </UFormField>
+          </AppFormField>
 
-          <UFormField
+          <AppFormField
             label="Email"
             required
           >
-            <UInput
+            <AppInput
               v-model="formEdit.email"
               type="email"
               placeholder="email@exemplo.com"
               class="w-full"
             />
-          </UFormField>
+          </AppFormField>
 
-          <UFormField
+          <AppFormField
             label="CPF"
             :error="cpfErro"
           >
-            <UInput
+            <AppInput
               :model-value="formEdit.cpf"
               placeholder="000.000.000-00"
               icon="i-lucide-fingerprint"
@@ -407,35 +414,35 @@ onMounted(async () => {
               @input="onCpfInput"
               @blur="validarCpfField"
             />
-          </UFormField>
+          </AppFormField>
 
           <div class="grid grid-cols-2 gap-4">
-            <UFormField
+            <AppFormField
               label="Perfil"
               required
             >
-              <USelect
+              <AppSelect
                 v-model="formEdit.perfil"
                 :items="perfilOptions"
               />
-            </UFormField>
+            </AppFormField>
 
-            <UFormField label="Unidade">
-              <USelect
+            <AppFormField label="Unidade">
+              <AppSelect
                 v-model="formEdit.unidade_id"
                 :items="unidadeOptions"
                 placeholder="Selecione"
               />
-            </UFormField>
+            </AppFormField>
           </div>
 
-          <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-            <USwitch v-model="formEdit.ativo" />
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-surface-area">
+            <AppSwitch v-model="formEdit.ativo" />
             <div>
               <p class="text-sm font-medium">
                 Usuário ativo
               </p>
-              <p class="text-xs text-gray-500">
+              <p class="text-xs text-stone-500 dark:text-stone-400">
                 Usuários inativos não conseguem fazer login
               </p>
             </div>
@@ -447,21 +454,21 @@ onMounted(async () => {
           v-else-if="modo === 'senha'"
           class="space-y-4"
         >
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-stone-500 dark:text-stone-400">
             Definir nova senha para <strong>{{ modalDetalhe.item.value.nome }}</strong>
           </p>
-          <UFormField
+          <AppFormField
             label="Nova Senha"
             required
             hint="Mínimo 6 caracteres"
           >
-            <UInput
+            <AppInput
               v-model="novaSenha"
               type="password"
               placeholder="Nova senha"
               class="w-full"
             />
-          </UFormField>
+          </AppFormField>
         </div>
 
         <!-- MODO EXCLUIR -->
@@ -471,7 +478,7 @@ onMounted(async () => {
         >
           <div class="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
             <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-2">
-              <UIcon
+              <AppIcon
                 name="i-lucide-alert-triangle"
                 class="text-lg"
               />
@@ -493,22 +500,22 @@ onMounted(async () => {
         <div class="flex justify-end gap-2">
           <!-- Modo VER -->
           <template v-if="modo === 'ver'">
-            <UButton
+            <AppButton
               icon="i-lucide-pencil"
               variant="soft"
               @click="entrarEdicao"
             >
               Editar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-key"
               variant="soft"
               color="warning"
               @click="modo = 'senha'; novaSenha = ''"
             >
               Redefinir Senha
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               v-if="modalDetalhe.item.value?.id !== currentUser?.id"
               icon="i-lucide-trash-2"
               variant="soft"
@@ -516,62 +523,62 @@ onMounted(async () => {
               @click="modo = 'excluir'"
             >
               Excluir
-            </UButton>
+            </AppButton>
           </template>
 
           <!-- Modo EDITAR -->
           <template v-else-if="modo === 'editar'">
-            <UButton
+            <AppButton
               variant="outline"
               color="neutral"
               @click="modo = 'ver'"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-check"
               :loading="salvando"
               @click="handleSalvar"
             >
               Salvar
-            </UButton>
+            </AppButton>
           </template>
 
           <!-- Modo SENHA -->
           <template v-else-if="modo === 'senha'">
-            <UButton
+            <AppButton
               variant="outline"
               color="neutral"
               @click="modo = 'ver'"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-key"
               :disabled="novaSenha.length < 6"
               @click="handleResetSenha"
             >
               Confirmar
-            </UButton>
+            </AppButton>
           </template>
 
           <!-- Modo EXCLUIR -->
           <template v-else-if="modo === 'excluir'">
-            <UButton
+            <AppButton
               variant="outline"
               color="neutral"
               @click="modo = 'ver'"
             >
               Cancelar
-            </UButton>
-            <UButton
+            </AppButton>
+            <AppButton
               icon="i-lucide-trash-2"
               color="error"
               variant="soft"
               @click="handleExcluir"
             >
               Excluir Permanentemente
-            </UButton>
+            </AppButton>
           </template>
         </div>
       </template>

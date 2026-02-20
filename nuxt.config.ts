@@ -1,8 +1,11 @@
+import tailwindcss from '@tailwindcss/vite'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
-    '@nuxt/ui',
+    '@nuxt/icon',
+    '@nuxtjs/color-mode',
     '@nuxtjs/supabase'
   ],
 
@@ -11,6 +14,10 @@ export default defineNuxtConfig({
   },
 
   css: ['~/css/main.css'],
+
+  vite: {
+    plugins: [tailwindcss()]
+  },
 
   runtimeConfig: {
     supabaseServiceKey: process.env.SUPABASE_SECRET_KEY,
@@ -22,6 +29,16 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-01-15',
+
+  colorMode: {
+    classSuffix: '',
+    preference: 'light',
+    fallback: 'light'
+  },
+
+  icon: {
+    serverBundle: 'local'
+  },
 
   eslint: {
     config: {
@@ -36,7 +53,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirm',
-      exclude: ['/login', '/setup']
+      exclude: ['/login', '/setup', '/registro', '/reset-senha']
     }
   }
 })

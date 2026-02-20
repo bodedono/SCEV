@@ -19,19 +19,19 @@ const chartData = computed(() => ({
     {
       label: 'Empréstimos',
       data: props.data.map(d => d.emprestimos),
-      backgroundColor: '#3b82f6',
+      backgroundColor: '#795548',
       borderRadius: 4
     },
     {
       label: 'Vales',
       data: props.data.map(d => d.vales),
-      backgroundColor: '#f97316',
+      backgroundColor: '#D4A574',
       borderRadius: 4
     },
     {
       label: 'Saldo Devedor',
       data: props.data.map(d => d.saldoDevedor),
-      backgroundColor: '#ef4444',
+      backgroundColor: '#C0392B',
       borderRadius: 4
     }
   ]
@@ -42,7 +42,7 @@ const chartOptions = computed(() => ({
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      labels: { color: isDark.value ? '#9ca3af' : '#6b7280' }
+      labels: { color: isDark.value ? '#BCAAA4' : '#8D6E63' }
     },
     tooltip: {
       callbacks: {
@@ -53,12 +53,12 @@ const chartOptions = computed(() => ({
   },
   scales: {
     x: {
-      ticks: { color: isDark.value ? '#9ca3af' : '#6b7280' },
+      ticks: { color: isDark.value ? '#BCAAA4' : '#8D6E63' },
       grid: { display: false }
     },
     y: {
       ticks: {
-        color: isDark.value ? '#9ca3af' : '#6b7280',
+        color: isDark.value ? '#BCAAA4' : '#8D6E63',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         callback: (value: any) => moeda(value)
       },
@@ -69,17 +69,18 @@ const chartOptions = computed(() => ({
 </script>
 
 <template>
-  <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+  <div class="card p-5">
     <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
-      <UIcon
+      <AppIcon
         name="i-lucide-building-2"
-        class="text-indigo-500"
+        class="text-amber-700"
       />
       Comparativo por Unidade
     </h3>
     <div
       v-if="data.length === 0"
-      class="flex items-center justify-center h-64 text-gray-400 text-sm"
+      class="flex items-center justify-center h-64 text-sm"
+      style="color: var(--text-muted);"
     >
       Sem dados para o período selecionado
     </div>

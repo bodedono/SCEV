@@ -17,15 +17,18 @@ const formatVar = (val: number) => {
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- Total Emprestado -->
-    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+    <div class="card p-5">
       <div class="flex items-center gap-3 mb-3">
-        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400">
-          <UIcon
+        <div class="flex items-center justify-center w-10 h-10 rounded-lg icon-box-emprestimo">
+          <AppIcon
             name="i-lucide-banknote"
             class="text-xl"
           />
         </div>
-        <p class="text-sm text-gray-500">
+        <p
+          class="text-sm"
+          style="color: var(--text-secondary);"
+        >
           Total Emprestado
         </p>
       </div>
@@ -41,15 +44,18 @@ const formatVar = (val: number) => {
     </div>
 
     <!-- Total Vales -->
-    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+    <div class="card p-5">
       <div class="flex items-center gap-3 mb-3">
-        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-400">
-          <UIcon
+        <div class="flex items-center justify-center w-10 h-10 rounded-lg icon-box-vale">
+          <AppIcon
             name="i-lucide-receipt"
             class="text-xl"
           />
         </div>
-        <p class="text-sm text-gray-500">
+        <p
+          class="text-sm"
+          style="color: var(--text-secondary);"
+        >
           Total Vales
         </p>
       </div>
@@ -65,15 +71,18 @@ const formatVar = (val: number) => {
     </div>
 
     <!-- Total Recebido -->
-    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+    <div class="card p-5">
       <div class="flex items-center gap-3 mb-3">
-        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400">
-          <UIcon
+        <div class="flex items-center justify-center w-10 h-10 rounded-lg icon-box-recebimento">
+          <AppIcon
             name="i-lucide-trending-up"
             class="text-xl"
           />
         </div>
-        <p class="text-sm text-gray-500">
+        <p
+          class="text-sm"
+          style="color: var(--text-secondary);"
+        >
           Total Recebido
         </p>
       </div>
@@ -89,15 +98,18 @@ const formatVar = (val: number) => {
     </div>
 
     <!-- Taxa de Adimplência -->
-    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+    <div class="card p-5">
       <div class="flex items-center gap-3 mb-3">
-        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-400">
-          <UIcon
+        <div class="flex items-center justify-center w-10 h-10 rounded-lg icon-box-adimplencia">
+          <AppIcon
             name="i-lucide-shield-check"
             class="text-xl"
           />
         </div>
-        <p class="text-sm text-gray-500">
+        <p
+          class="text-sm"
+          style="color: var(--text-secondary);"
+        >
           Adimplência
         </p>
       </div>

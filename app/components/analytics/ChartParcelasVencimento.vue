@@ -20,7 +20,7 @@ const chartData = computed(() => ({
   labels: ['Em dia', 'Vence em 7 dias', 'Vence em 30 dias', 'Atrasadas'],
   datasets: [{
     data: [props.data.emDia, props.data.vence7dias, props.data.vence30dias, props.data.atrasadas],
-    backgroundColor: ['#22c55e', '#eab308', '#f97316', '#ef4444'],
+    backgroundColor: ['#6D9B76', '#D4A574', '#C4956A', '#C0392B'],
     borderRadius: 4
   }]
 }))
@@ -40,11 +40,11 @@ const chartOptions = computed(() => ({
   },
   scales: {
     x: {
-      ticks: { color: isDark.value ? '#9ca3af' : '#6b7280' },
+      ticks: { color: isDark.value ? '#BCAAA4' : '#8D6E63' },
       grid: { color: isDark.value ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }
     },
     y: {
-      ticks: { color: isDark.value ? '#9ca3af' : '#6b7280' },
+      ticks: { color: isDark.value ? '#BCAAA4' : '#8D6E63' },
       grid: { display: false }
     }
   }
@@ -52,17 +52,18 @@ const chartOptions = computed(() => ({
 </script>
 
 <template>
-  <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
+  <div class="card p-5">
     <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
-      <UIcon
+      <AppIcon
         name="i-lucide-calendar-clock"
-        class="text-amber-500"
+        class="text-amber-600"
       />
       Parcelas por Vencimento
     </h3>
     <div
       v-if="total === 0"
-      class="flex items-center justify-center h-64 text-gray-400 text-sm"
+      class="flex items-center justify-center h-64 text-sm"
+      style="color: var(--text-muted);"
     >
       Nenhuma parcela pendente
     </div>

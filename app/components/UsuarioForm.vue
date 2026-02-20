@@ -19,6 +19,8 @@ const form = reactive({
   nome: props.usuario?.nome ?? '',
   email: props.usuario?.email ?? '',
   cpf: props.usuario?.cpf ? formatarCPF(props.usuario.cpf) : '',
+  telefone: props.usuario?.telefone ?? '',
+  data_nascimento: props.usuario?.data_nascimento ?? '',
   senha: '',
   perfil: (props.usuario?.perfil ?? 'OPERADOR') as PerfilUsuario,
   unidade_id: props.usuario?.unidade_id ?? (undefined as number | undefined),
@@ -79,6 +81,8 @@ watch(() => props.usuario, (usr) => {
   form.nome = usr?.nome ?? ''
   form.email = usr?.email ?? ''
   form.cpf = usr?.cpf ? formatarCPF(usr.cpf) : ''
+  form.telefone = usr?.telefone ?? ''
+  form.data_nascimento = usr?.data_nascimento ?? ''
   form.senha = ''
   form.perfil = usr?.perfil ?? 'OPERADOR'
   form.unidade_id = usr?.unidade_id ?? undefined
@@ -92,35 +96,35 @@ watch(() => props.usuario, (usr) => {
     class="space-y-4"
     @submit.prevent="salvar"
   >
-    <UFormField
+    <AppFormField
       label="Nome Completo"
       required
     >
-      <UInput
+      <AppInput
         v-model="form.nome"
         placeholder="Nome do usuário"
         class="w-full"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <AppFormField
       label="Email"
       required
     >
-      <UInput
+      <AppInput
         v-model="form.email"
         type="email"
         placeholder="email@exemplo.com"
         class="w-full"
         :disabled="isEdicao"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <AppFormField
       label="CPF"
       :error="cpfErro"
     >
-      <UInput
+      <AppInput
         :model-value="form.cpf"
         placeholder="000.000.000-00"
         icon="i-lucide-fingerprint"
@@ -129,79 +133,100 @@ watch(() => props.usuario, (usr) => {
         @input="onCpfInput"
         @blur="validarCpfField"
       />
-    </UFormField>
+    </AppFormField>
 
-    <UFormField
+    <div class="grid grid-cols-2 gap-4">
+      <AppFormField label="Telefone">
+        <AppInput
+          v-model="form.telefone"
+          type="tel"
+          placeholder="(00) 00000-0000"
+          icon="i-lucide-phone"
+          class="w-full"
+        />
+      </AppFormField>
+
+      <AppFormField label="Data de Nascimento">
+        <AppInput
+          v-model="form.data_nascimento"
+          type="date"
+          class="w-full"
+        />
+      </AppFormField>
+    </div>
+
+    <AppFormField
       v-if="!isEdicao"
       label="Senha"
       required
       hint="Mínimo 6 caracteres"
     >
-      <UInput
+      <AppInput
         v-model="form.senha"
         type="password"
         placeholder="Senha inicial"
         class="w-full"
       />
-    </UFormField>
+    </AppFormField>
 
     <div class="grid grid-cols-2 gap-4">
-      <UFormField
+      <AppFormField
         label="Perfil"
         required
       >
-        <USelect
+        <AppSelect
           v-model="form.perfil"
           :items="perfilOptions"
         />
-      </UFormField>
+      </AppFormField>
 
-      <UFormField label="Unidade">
-        <USelect
+      <AppFormField label="Unidade">
+        <AppSelect
           v-model="form.unidade_id"
           :items="unidadeOptions"
           placeholder="Selecione"
         />
-      </UFormField>
+      </AppFormField>
     </div>
 
     <div
       v-if="form.perfil === 'GESTOR' && !form.unidade_id"
       class="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 text-sm text-yellow-700 dark:text-yellow-400 flex items-center gap-2"
     >
-      <UIcon name="i-lucide-alert-triangle" />
+      <AppIcon name="i-lucide-alert-triangle" />
       Gestores devem ter uma unidade atribuída.
     </div>
 
     <div
       v-if="!isEdicao"
-      class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
+      class="flex items-center gap-3 p-3 rounded-lg"
+      style="background-color: var(--bg-surface-hover);"
     >
-      <USwitch v-model="form.auto_confirmar" />
+      <AppSwitch v-model="form.auto_confirmar" />
       <div>
         <p class="text-sm font-medium">
           Confirmar email automaticamente
         </p>
-        <p class="text-xs text-gray-500">
+        <p class="text-xs text-body">
           Pular verificação por email - o usuário pode logar imediatamente
         </p>
       </div>
     </div>
 
     <div class="flex justify-end gap-3 pt-4">
-      <UButton
+      <AppButton
         variant="outline"
         color="neutral"
         @click="emit('cancelar')"
       >
         Cancelar
-      </UButton>
-      <UButton
+      </AppButton>
+      <AppButton
         type="submit"
         icon="i-lucide-check"
       >
         {{ isEdicao ? 'Atualizar' : 'Criar Usuário' }}
-      </UButton>
+      </AppButton>
     </div>
   </form>
 </template>

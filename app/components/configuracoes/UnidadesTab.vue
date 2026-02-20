@@ -22,41 +22,41 @@ onMounted(() => listarUnidades())
 <template>
   <div>
     <div class="flex justify-end mb-4">
-      <UButton
+      <AppButton
         icon="i-lucide-plus"
         @click="modalUnidade = true"
       >
         Nova Unidade
-      </UButton>
+      </AppButton>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div
         v-for="unidade in unidades"
         :key="unidade.id"
-        class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 flex items-center gap-3"
+        class="card p-4 flex items-center gap-3"
       >
         <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary">
-          <UIcon name="i-lucide-building-2" />
+          <AppIcon name="i-lucide-building-2" />
         </div>
         <p class="flex-1 font-medium">
           {{ unidade.nome }}
         </p>
-        <UBadge
+        <AppBadge
           :color="unidade.ativo ? 'success' : 'error'"
           variant="subtle"
           size="xs"
         >
           {{ unidade.ativo ? 'Ativa' : 'Inativa' }}
-        </UBadge>
+        </AppBadge>
       </div>
     </div>
 
     <div
       v-if="unidades.length === 0"
-      class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500"
+      class="flex flex-col items-center justify-center py-16 text-stone-400 dark:text-stone-500"
     >
-      <UIcon
+      <AppIcon
         name="i-lucide-building-2"
         class="text-3xl mb-3"
       />
@@ -70,31 +70,31 @@ onMounted(() => listarUnidades())
       title="Nova Unidade"
       icon="i-lucide-building-2"
     >
-      <UFormField
+      <AppFormField
         label="Nome da Unidade"
         required
       >
-        <UInput
+        <AppInput
           v-model="novaUnidade.nome"
           placeholder="Ex: Bode do Nô"
         />
-      </UFormField>
+      </AppFormField>
 
       <template #footer>
         <div class="flex justify-end gap-2">
-          <UButton
+          <AppButton
             variant="outline"
             color="neutral"
             @click="modalUnidade = false"
           >
             Cancelar
-          </UButton>
-          <UButton
+          </AppButton>
+          <AppButton
             icon="i-lucide-check"
             @click="handleCriarUnidade"
           >
             Criar Unidade
-          </UButton>
+          </AppButton>
         </div>
       </template>
     </AppModal>

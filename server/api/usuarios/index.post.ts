@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   await verificarAdmin(event)
 
   const body = await readBody(event)
-  const { nome, email, cpf, senha, perfil, unidade_id, auto_confirmar } = body
+  const { nome, email, cpf, senha, perfil, unidade_id, auto_confirmar, telefone, data_nascimento } = body
 
   if (!nome?.trim()) {
     throw createError({ statusCode: 400, message: 'Nome é obrigatório' })
@@ -51,6 +51,8 @@ export default defineEventHandler(async (event) => {
       nome: nome.trim(),
       email: email.trim(),
       cpf: cpf ? cpf.replace(/\D/g, '') : null,
+      telefone: telefone?.trim() || null,
+      data_nascimento: data_nascimento || null,
       perfil,
       unidade_id: unidade_id || null,
       ativo: true
