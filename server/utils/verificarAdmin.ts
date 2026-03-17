@@ -7,11 +7,16 @@ export const verificarAdmin = async (event: H3Event) => {
     throw createError({ statusCode: 401, message: 'Não autorizado' })
   }
 
+  const userId = user.sub || user.id
+  if (!userId) {
+    throw createError({ statusCode: 401, message: 'Não foi possível identificar o usuário' })
+  }
+
   const supabase = serverSupabaseServiceRole(event)
   const { data: usuario } = await supabase
     .from('usuarios')
     .select('perfil')
-    .eq('id', user.id)
+    .eq('id', userId)
     .single()
 
   if (!usuario || usuario.perfil !== 'ADMIN') {
