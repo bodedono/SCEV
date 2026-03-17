@@ -24,6 +24,10 @@ export default defineNuxtConfig({
     groqApiKey: process.env.GROQ_API_KEY
   },
 
+  nitro: {
+    preset: 'cloudflare-pages'
+  },
+
   routeRules: {
     '/': { prerender: false }
   },

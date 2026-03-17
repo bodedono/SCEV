@@ -58,3 +58,13 @@ pnpm preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Seed com dados de exemplo (Boa Viagem)
+
+Para popular o sistema com dados reais da folha 02/2026 (unidade Boa Viagem, três funcionários e três empréstimos com parcelas):
+
+1. Execute o schema e o RLS no Supabase (`001_schema.sql` e `002_rls.sql`) se ainda não executou.
+2. Crie pelo menos um usuário **Admin** (pelo app, em **Configurações > Usuários**, ou no Supabase: Authentication > Users e depois insert em `usuarios` com `perfil = 'ADMIN'`).
+3. No **SQL Editor** do Supabase, execute o arquivo `supabase/004_seed_boa_viagem.sql`.
+
+O script cria a unidade "Boa Viagem", os funcionários Jonathan Dias Ferrer, Elane Mendes e Ronne Henrique (matrículas BV001–BV003), os três empréstimos do PDF, gera as parcelas e marca as 8 primeiras do Jonathan como pagas. Parcelas com vencimento no passado ficam como atrasadas.
